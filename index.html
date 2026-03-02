@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Memories Padel Club</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ["Playfair Display", "serif"],
+          sans:    ["Montserrat", "sans-serif"],
+          script:  ["Great Vibes", "cursive"],
+        },
+      },
+    },
+  };
+</script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background-color: #1e3320; color: #fff; font-family: 'Montserrat', sans-serif; }
+
+  #mainNav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    padding: 12px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background 0.4s;
+  }
+  @media(min-width:768px){ #mainNav { padding: 16px 32px; } }
+  #mainNav.scrolled {
+    background: rgba(10,26,8,0.96);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  #mainNav a { transition: color 0.2s; }
+
+  .carousel-wrap { position: relative; width: 100%; height: 100vh; overflow: hidden; }
+  .carousel-track { display: flex; height: 100%; transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .carousel-slide { min-width: 100%; height: 100%; }
+  .carousel-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .carousel-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.35); cursor:pointer; transition:background 0.3s,transform 0.3s; }
+  .carousel-dot.active { background:white; transform:scale(1.35); }
+
+  .section-label { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:#c9a84c; margin-bottom:12px; font-family:'Montserrat',sans-serif; font-weight:600; }
+  .section-title { font-family:'Playfair Display',serif; font-size:clamp(1.6rem,5vw,2.8rem); font-weight:400; color:#fff; line-height:1.2; }
+  .divider { width:40px; height:1px; background:#c9a84c; opacity:0.5; margin:16px auto 0; }
+
+  /* mobile section rhythm */
+  .sec-pad { padding: 64px 20px; }
+  @media(min-width:768px){ .sec-pad { padding: 96px 32px; } }
+
+  .sede-card { background:rgba(255,255,255,0.04); border:1px solid rgba(201,168,76,0.2); border-radius:8px; padding:20px 16px; transition:background 0.3s,border-color 0.3s,transform 0.3s; text-decoration:none; display:flex; flex-direction:column; gap:6px; min-height:110px; }
+  @media(min-width:768px){ .sede-card { padding:28px 24px; } }
+  .sede-card:hover { background:rgba(201,168,76,0.08); border-color:rgba(201,168,76,0.5); transform:translateY(-2px); }
+  .sede-card:active { background:rgba(201,168,76,0.12); transform:scale(0.98); }
+  .sede-card .city-tag { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:#c9a84c; font-weight:600; }
+  .sede-card .venue-title { font-family:'Playfair Display',serif; font-size:15px; color:#fff; font-weight:600; line-height:1.3; }
+  .sede-card .venue-arrow { margin-top:auto; padding-top:8px; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.3); display:flex; align-items:center; gap:4px; transition:color 0.2s; }
+  .sede-card:hover .venue-arrow { color:#c9a84c; }
+
+  /* categorias */
+  .cat-tab { background:transparent; color:rgba(255,255,255,0.45); border-color:rgba(255,255,255,0.15); cursor:pointer; }
+  .cat-tab:hover { color:#fff; border-color:rgba(201,168,76,0.4); }
+  .active-tab { background:rgba(201,168,76,0.12); color:#c9a84c !important; border-color:#c9a84c !important; }
+  .cat-card { background:rgba(255,255,255,0.04); border:1px solid; border-radius:10px; padding:18px 14px; display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; }
+  .cat-tier { font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; font-family:'Montserrat',sans-serif; }
+  .cat-level { font-family:'Playfair Display',serif; font-size:1.4rem; color:#fff; line-height:1.2; margin:4px 0; }
+  .cat-range { font-size:11px; color:rgba(255,255,255,0.4); font-family:'Montserrat',sans-serif; letter-spacing:1px; }
+
+  .contact-card { background:rgba(255,255,255,0.04); border:1px solid rgba(201,168,76,0.2); border-radius:10px; padding:20px 20px; display:flex; flex-direction:row; align-items:center; gap:16px; transition:background 0.3s,border-color 0.3s,transform 0.3s; text-decoration:none; }
+  @media(min-width:480px){ .contact-card { flex-direction:column; align-items:center; padding:28px 24px; gap:14px; } }
+  .contact-card:hover { background:rgba(201,168,76,0.08); border-color:rgba(201,168,76,0.5); transform:translateY(-2px); }
+  .contact-card:active { background:rgba(201,168,76,0.12); transform:scale(0.98); }
+  .contact-card .cc-icon { flex-shrink:0; }
+  .contact-card .cc-body { text-align:left; }
+  @media(min-width:480px){ .contact-card .cc-body { text-align:center; } }
+  .contact-card .cc-cta { display:none; }
+  @media(min-width:480px){ .contact-card .cc-cta { display:flex; } }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);} }
+  .fade-up { animation:fadeUp 1s ease-out forwards; }
+  .delay-1 { animation-delay:0.1s; opacity:0; }
+  .delay-2 { animation-delay:0.25s; opacity:0; }
+  .delay-3 { animation-delay:0.4s; opacity:0; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;">
+  <!-- izquierda: logo (oculto en el hero) -->
+  <a href="#hero" id="navLogo" style="opacity:0;pointer-events:none;transition:opacity 0.4s;justify-self:start;">
+    <img src="RECURSOS/logo.PNG" alt="Memories Padel Club" class="h-8 w-auto opacity-80 hover:opacity-100 transition-opacity"/>
+  </a>
+  <!-- centro: links -->
+  <div class="hidden md:flex space-x-8 uppercase tracking-widest text-xs font-medium">
+    <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#circuito">Tour</a>
+    <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#torneos">Torneos</a>
+    <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#redes">Redes</a>
+  </div>
+  <!-- derecha: botón app -->
+  <div style="justify-self:end;">
+    <a href="https://padeldoor.app/descargar" target="_blank" rel="noopener noreferrer"
+       class="inline-flex items-center gap-1.5 text-[10px] md:text-xs uppercase tracking-widest font-semibold bg-[#c9a84c] text-[#0f200f] px-3 py-2 md:px-4 rounded hover:bg-white transition-colors duration-200">
+      <span class="material-icons" style="font-size:14px;">smartphone</span>
+      App Torneos
+    </a>
+  </div>
+</nav>
+
+
+<!-- HERO -->
+<section id="hero" class="carousel-wrap">
+  <div class="carousel-track" id="carouselTrack">
+    <div class="carousel-slide"><img src="https://placehold.co/1920x1080/384e28/384e28" alt="Foto 1"/></div>
+    <div class="carousel-slide"><img src="https://placehold.co/1920x1080/384e28/384e28" alt="Foto 2"/></div>
+    <div class="carousel-slide"><img src="https://placehold.co/1920x1080/384e28/384e28" alt="Foto 3"/></div>
+  </div>
+  <div class="absolute inset-0 bg-black/45 z-10 pointer-events-none"></div>
+  <div class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none fade-up delay-2">
+    <img alt="Memories Padel Club" class="w-full max-w-[220px] md:max-w-[360px] h-auto drop-shadow-2xl" src="RECURSOS/logo.PNG"/>
+  </div>
+  <div class="absolute bottom-16 left-0 right-0 z-30 flex justify-center">
+    <a href="#circuito" class="text-white/40 hover:text-white transition-colors flex flex-col items-center gap-1">
+      <span class="text-[10px] uppercase tracking-widest">Descubre</span>
+      <span class="material-icons animate-bounce" style="font-size:20px;">keyboard_arrow_down</span>
+    </a>
+  </div>
+  <div class="absolute bottom-8 left-0 right-0 z-30 flex justify-center gap-3" id="carouselDots">
+    <button class="carousel-dot active" data-index="0" aria-label="Slide 1"></button>
+    <button class="carousel-dot" data-index="1" aria-label="Slide 2"></button>
+    <button class="carousel-dot" data-index="2" aria-label="Slide 3"></button>
+  </div>
+</section>
+
+
+<!-- EL CIRCUITO -->
+<section id="circuito" class="sec-pad" style="background:linear-gradient(160deg,#0f200f 0%,#2b4a1e 60%,#1a3a16 100%);">
+  <div class="max-w-4xl mx-auto text-center">
+    <p class="section-label fade-up delay-1">Temporada 2026</p>
+    <h1 class="fade-up delay-2" style="font-family:'Great Vibes',cursive;font-size:clamp(3rem,8vw,5.5rem);line-height:1.1;text-shadow:0 4px 24px rgba(0,0,0,0.5);">
+      Memories Padel Tour
+    </h1>
+    <p class="fade-up delay-3 mt-6 text-sm text-white/60 leading-relaxed tracking-wide font-light max-w-xl mx-auto">
+      El circuito de padel de referencia de la Comunitat Valenciana.<br>Ocho sedes exclusivas, una sola competicion.
+    </p>
+    <div class="divider"></div>
+    <div class="mt-10 md:mt-16 grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
+      <div class="text-center"><p style="font-family:'Playfair Display',serif;font-size:2.5rem;color:#c9a84c;">8</p><p class="text-xs uppercase tracking-widest text-white/50 mt-1">Sedes</p></div>
+      <div class="text-center"><p style="font-family:'Playfair Display',serif;font-size:2.5rem;color:#c9a84c;">3</p><p class="text-xs uppercase tracking-widest text-white/50 mt-1">Provincias</p></div>
+      <div class="text-center"><p style="font-family:'Playfair Display',serif;font-size:2.5rem;color:#c9a84c;">2026</p><p class="text-xs uppercase tracking-widest text-white/50 mt-1">Temporada</p></div>
+      <div class="text-center"><p style="font-family:'Playfair Display',serif;font-size:2.5rem;color:#c9a84c;">&#8734;</p><p class="text-xs uppercase tracking-widest text-white/50 mt-1">Pasion</p></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SEDES -->
+<section id="sedes" class="sec-pad" style="background:#1b2f17;">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-8 md:mb-14">
+      <p class="section-label">Tour</p>
+      <h2 class="section-title">Las Sedes</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4" id="sedesGrid"></div>
+  </div>
+</section>
+
+
+<!-- CATEGORÍAS -->
+<section id="categorias" class="sec-pad" style="background:#0f200f;">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-8 md:mb-12">
+      <p class="section-label">Tour</p>
+      <h2 class="section-title">Categor&iacute;as</h2>
+      <div class="divider"></div>
+    </div>
+    <!-- Tabs -->
+    <div class="flex justify-center gap-3 mb-8">
+      <button id="tabGen" onclick="showCat('gen')" class="cat-tab active-tab px-5 py-2 text-xs uppercase tracking-widest font-semibold rounded border transition-colors duration-200">Generales</button>
+      <button id="tabFem" onclick="showCat('fem')" class="cat-tab px-5 py-2 text-xs uppercase tracking-widest font-semibold rounded border transition-colors duration-200">Femeninas</button>
+    </div>
+    <!-- Generales -->
+    <div id="catGen">
+      <p class="text-center text-xs text-white/40 mb-6 uppercase tracking-widest">(aptas para chicos, chicas y mixto)</p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div class="cat-card" style="border-color:rgba(201,168,76,0.6);">
+          <span class="cat-tier" style="color:#c9a84c;">Premier</span>
+          <span class="cat-level">2&ordf;</span>
+          <span class="cat-range">4.75 &ndash; 5.5</span>
+        </div>
+        <div class="cat-card" style="border-color:rgba(180,180,220,0.6);">
+          <span class="cat-tier" style="color:#b0b0d8;">&Eacute;lite</span>
+          <span class="cat-level">3&ordf;</span>
+          <span class="cat-range">4.25 &ndash; 4.75</span>
+        </div>
+        <div class="cat-card" style="border-color:rgba(185,220,255,0.6);">
+          <span class="cat-tier" style="color:#a8d8f0;">Diamante</span>
+          <span class="cat-level" style="font-size:1.2rem;">3&ordf; baja / 4&ordf; alta</span>
+          <span class="cat-range">3.75 &ndash; 4.25</span>
+        </div>
+        <div class="cat-card" style="border-color:rgba(201,168,76,0.4);">
+          <span class="cat-tier" style="color:#c9a84c;">Oro</span>
+          <span class="cat-level">4&ordf;</span>
+          <span class="cat-range">3.25 &ndash; 3.75</span>
+        </div>
+        <div class="cat-card" style="border-color:rgba(192,192,192,0.5);">
+          <span class="cat-tier" style="color:#c0c0c0;">Plata</span>
+          <span class="cat-level" style="font-size:1.2rem;">4&ordf; baja / 5&ordf; alta</span>
+          <span class="cat-range">2.75 &ndash; 3.25</span>
+        </div>
+        <div class="cat-card" style="border-color:rgba(180,100,40,0.6);">
+          <span class="cat-tier" style="color:#cd7f32;">Bronce</span>
+          <span class="cat-level">5&ordf;</span>
+          <span class="cat-range">2.25 &ndash; 2.75</span>
+        </div>
+        <div class="cat-card" style="border-color:rgba(100,180,100,0.4);">
+          <span class="cat-tier" style="color:#7ec880;">Iniciaci&oacute;n</span>
+          <span class="cat-level">5&ordf; baja</span>
+          <span class="cat-range">1.0 &ndash; 2.25</span>
+        </div>
+      </div>
+    </div>
+    <!-- Femeninas -->
+    <div id="catFem" style="display:none;">
+      <p class="text-center text-xs text-white/40 mb-6 uppercase tracking-widest">Categor&iacute;as femeninas</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto">
+        <div class="cat-card" style="border-color:rgba(185,220,255,0.6);">
+          <span class="cat-tier" style="color:#a8d8f0;">Diamante</span>
+          <span class="cat-level">2&ordf; fem</span>
+          <span class="cat-range">4.0 &ndash; 4.5</span>
+        </div>
+        <div class="cat-card" style="border-color:rgba(201,168,76,0.5);">
+          <span class="cat-tier" style="color:#c9a84c;">Oro</span>
+          <span class="cat-level">3&ordf; fem</span>
+          <span class="cat-range">3.25 &ndash; 4.0</span>
+        </div>
+        <div class="cat-card" style="border-color:rgba(192,192,192,0.5);">
+          <span class="cat-tier" style="color:#c0c0c0;">Plata</span>
+          <span class="cat-level">4&ordf; fem</span>
+          <span class="cat-range">2.75 &ndash; 3.25</span>
+        </div>
+        <div class="cat-card" style="border-color:rgba(180,100,40,0.6);">
+          <span class="cat-tier" style="color:#cd7f32;">Bronce</span>
+          <span class="cat-level">5&ordf; fem</span>
+          <span class="cat-range">2.0 &ndash; 2.75</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8 text-center">
+      <p class="text-xs text-white/40 leading-relaxed">*Recomendamos un nivel similar entre la pareja &nbsp;&middot;&nbsp; *Si tienes dudas, cons&uacute;ltanos por tu categor&iacute;a</p>
+      <p class="text-xs text-white/30 mt-2">La organizaci&oacute;n se reserva el derecho de eliminar del torneo a la pareja que no cumpla con el nivel correspondiente.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- APP -->
+<section id="app" class="sec-pad" style="background:linear-gradient(135deg,#0f200f 0%,#1e3320 100%);">
+  <div class="max-w-4xl mx-auto">
+    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+      <div class="flex-1 text-center lg:text-left">
+        <p class="section-label">Tecnologia</p>
+        <h2 class="section-title">Gestiona tus torneos<br>desde la app</h2>
+        <p class="mt-5 text-sm text-white/55 leading-relaxed font-light max-w-md mx-auto lg:mx-0">
+          Inscribete, consulta cuadros, resultados y clasificaciones en tiempo real. Todo el Memories Padel Tour en la palma de tu mano.
+        </p>
+        <a href="https://padeldoor.app/descargar" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-3 mt-8 px-7 py-3.5 bg-[#c9a84c] text-[#0f200f] text-xs uppercase tracking-widest font-semibold rounded hover:bg-white transition-colors duration-200">
+          <span class="material-icons" style="font-size:18px;">smartphone</span>
+          Descargar PadelDoor
+        </a>
+        <p class="mt-3 text-[11px] text-white/30 uppercase tracking-wider">padeldoor.app/descargar</p>
+      </div>
+      <div class="hidden lg:flex flex-shrink-0 flex-col items-center gap-6">
+        <div style="width:120px;height:120px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:24px;" class="flex items-center justify-center">
+          <span class="material-icons" style="font-size:56px;color:#c9a84c;">sports_tennis</span>
+        </div>
+        <div class="flex gap-4">
+          <div style="width:52px;height:52px;background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:12px;" class="flex items-center justify-center"><span class="material-icons" style="font-size:24px;color:#c9a84c;">emoji_events</span></div>
+          <div style="width:52px;height:52px;background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:12px;" class="flex items-center justify-center"><span class="material-icons" style="font-size:24px;color:#c9a84c;">leaderboard</span></div>
+          <div style="width:52px;height:52px;background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:12px;" class="flex items-center justify-center"><span class="material-icons" style="font-size:24px;color:#c9a84c;">notifications</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- TORNEOS -->
+<section id="torneos" class="sec-pad" style="background:#0f200f;">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-8 md:mb-14">
+      <p class="section-label">Calendario</p>
+      <h2 class="section-title">Próximos Torneos</h2>
+      <div class="divider"></div>
+    </div>
+    <!-- Placeholder torneos — reemplazar con datos reales -->
+    <div class="flex flex-col gap-4">
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:20px 20px;" class="flex items-center gap-5">
+        <div style="flex-shrink:0;width:52px;height:52px;background:rgba(201,168,76,0.1);border-radius:10px;border:1px solid rgba(201,168,76,0.3);" class="flex flex-col items-center justify-center">
+          <span style="font-family:'Playfair Display',serif;font-size:18px;color:#c9a84c;line-height:1;">—</span>
+        </div>
+        <div class="flex-1">
+          <p class="text-xs uppercase tracking-widest text-[#c9a84c] font-semibold">Próximamente</p>
+          <p class="text-sm text-white mt-0.5 font-light">Las fechas de la temporada 2026 se anunciarán pronto.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- REDES -->
+<section id="redes" class="sec-pad" style="background:#162a12;">
+  <div class="max-w-3xl mx-auto text-center">
+    <p class="section-label">Comunidad</p>
+    <h2 class="section-title">Unete &amp; Siguenos</h2>
+    <p class="mt-4 text-sm text-white/50 leading-relaxed font-light max-w-md mx-auto">
+      Mantente al dia de todas las novedades, fechas y resultados del circuito.
+    </p>
+    <div class="divider"></div>
+    <div class="mt-10 md:mt-14 grid grid-cols-1 gap-4 max-w-lg mx-auto sm:max-w-xl sm:grid-cols-2">
+
+      <a href="https://www.instagram.com/memoriespadel/" target="_blank" rel="noopener noreferrer" class="contact-card" style="-webkit-tap-highlight-color:transparent;">
+        <div class="cc-icon" style="width:48px;height:48px;flex-shrink:0;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg class="h-6 w-6 fill-white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </div>
+        <div class="cc-body">
+          <p class="text-xs uppercase tracking-widest text-[#c9a84c] font-semibold">Instagram</p>
+          <p class="text-sm text-white mt-0.5">@memoriespadel</p>
+        </div>
+        <span class="cc-cta text-[10px] uppercase tracking-widest text-white/30 items-center gap-1">Seguir <span class="material-icons" style="font-size:12px;">open_in_new</span></span>
+      </a>
+
+      <a href="https://l.instagram.com/?u=https%3A%2F%2Fchat.whatsapp.com%2FJc6X6J1UmhCF8vPSU81VOq%3Fmode%3Dgi_t%26utm_source%3Dig%26utm_medium%3Dsocial%26utm_content%3Dlink_in_bio%26fbclid%3DPAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnPkkkVPvp-GBYkpMZH4Z_nErnaZ8SD3W05FNRKI2JiCYJ4QLIkevFGxWDpLk_aem_p3O0mMramJ8Z7ACd2pH2WQ&e=AT6EFphxTAfxF-LYF6C8sS5_9E51NHeLgoImIglxzv8RhqTr4g3gYIqhRm9lpCjOGbfVvur3rnjNJo4eGG-fUboV8_Eaq6d_ZQXf-3R39g"
+         target="_blank" rel="noopener noreferrer" class="contact-card">
+        <div class="cc-icon" style="width:48px;height:48px;flex-shrink:0;background:#25d366;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg class="h-6 w-6 fill-white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </div>
+        <div class="cc-body">
+          <p class="text-xs uppercase tracking-widest text-[#c9a84c] font-semibold">Comunidad WhatsApp</p>
+          <p class="text-sm text-white mt-0.5">Memories Padel Tour</p>
+        </div>
+        <span class="cc-cta text-[10px] uppercase tracking-widest text-white/30 items-center gap-1">Unirse <span class="material-icons" style="font-size:12px;">open_in_new</span></span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="w-full py-8 text-center bg-[#0a1a08] text-white/30 text-xs tracking-widest uppercase font-light border-t border-white/5">
+  <div class="flex flex-col items-center justify-center space-y-3">
+    <img src="RECURSOS/logo.PNG" alt="Logo" class="h-8 w-auto opacity-25 mb-1"/>
+    <p>2026 Memories Padel Club. All Rights Reserved.</p>
+    <div class="flex space-x-4 text-[10px]">
+      <a class="hover:text-white/60 transition-colors" href="#">Politica de privacidad</a>
+      <span>|</span>
+      <a class="hover:text-white/60 transition-colors" href="#">Terminos</a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+  (function(){
+    const track=document.getElementById('carouselTrack');
+    const dots=document.querySelectorAll('.carousel-dot');
+    const total=3; let current=0;
+    function goTo(i){current=(i+total)%total;track.style.transform='translateX(-'+current*100+'%)';dots.forEach((d,j)=>d.classList.toggle('active',j===current));}
+    dots.forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.index)));
+    // swipe support
+    let tx=0;
+    track.parentElement.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+    track.parentElement.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40)goTo(current+(dx<0?1:-1));},{passive:true});
+    setInterval(()=>goTo(current+1),4000);
+  })();
+  (function(){
+    const nav=document.getElementById('mainNav');
+    const logo=document.getElementById('navLogo');
+    function updateNav(){
+      const heroH=document.getElementById('hero').offsetHeight;
+      const pastHero=window.scrollY>=heroH-10;
+      nav.classList.toggle('scrolled',window.scrollY>60);
+      logo.style.opacity=pastHero?'1':'0';
+      logo.style.pointerEvents=pastHero?'auto':'none';
+    }
+    // active nav link highlight
+    const sections=['circuito','categorias','torneos','redes'];
+    const navLinks=document.querySelectorAll('#mainNav a[href^="#"]');
+    const io=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          navLinks.forEach(l=>{
+            const active=l.getAttribute('href')==='#'+e.target.id;
+            l.style.color=active?'#c9a84c':'';
+          });
+        }
+      });
+    },{rootMargin:'-40% 0px -55% 0px'});
+    sections.forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el);});
+    window.addEventListener('scroll',updateNav,{passive:true});
+    updateNav();
+  })();
+  function showCat(tab){
+    document.getElementById('catGen').style.display=tab==='gen'?'':'none';
+    document.getElementById('catFem').style.display=tab==='fem'?'':'none';
+    document.getElementById('tabGen').classList.toggle('active-tab',tab==='gen');
+    document.getElementById('tabFem').classList.toggle('active-tab',tab==='fem');
+  }
+  const venues=[
+    {city:"Valencia",venue:"Calderona Wellness",url:"https://calderonawellness.com/"},
+    {city:"Alzira",venue:"Zoma Sports Center",url:"https://zomasportscenter.es/"},
+    {city:"Denia",venue:"Padelpoint Denia",url:"https://www.jubopadel.com/"},
+    {city:"La Nucia",venue:"Padelpoint La Nucia",url:"https://padelpoint.es/"},
+    {city:"Benidorm",venue:"Padelpoint Melia Villaitana",url:"https://padelpoint.es/"},
+    {city:"Alicante",venue:"SportClub Alicante",url:"https://sportclubalicante.com/"},
+    {city:"Elda",venue:"Padel Lacy",url:"https://padellacy.es/"},
+    {city:"Elche",venue:"Vola Padel Club",url:"https://volapadel.com/"},
+  ];
+  const grid=document.getElementById('sedesGrid');
+  venues.forEach(v=>{
+    const c=document.createElement('a');
+    c.className='sede-card'; c.href=v.url; c.target='_blank'; c.rel='noopener noreferrer';
+    c.innerHTML='<span class="city-tag">'+v.city+'</span><span class="venue-title">'+v.venue+'</span><span class="venue-arrow">Ver sede <span class="material-icons" style="font-size:13px;">arrow_forward</span></span>';
+    grid.appendChild(c);
+  });
+</script>
+
+</body>
+</html>
