@@ -64,13 +64,35 @@
   .sede-card .venue-arrow { margin-top:auto; padding-top:8px; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.3); display:flex; align-items:center; gap:4px; transition:color 0.2s; }
   .sede-card:hover .venue-arrow { color:#c9a84c; }
 
+  /* map pins */
+  .map-pin {
+    position:absolute; transform:translate(-50%,-50%);
+    width:14px; height:14px; border-radius:50%;
+    background:#c9a84c; border:2px solid #fff;
+    box-shadow:0 0 0 0 rgba(201,168,76,0.6);
+    cursor:pointer; padding:0;
+    animation:pinPulse 2.4s infinite;
+    transition:transform 0.15s;
+  }
+  .map-pin::after {
+    content:''; position:absolute; bottom:-7px; left:50%; transform:translateX(-50%);
+    border-left:5px solid transparent; border-right:5px solid transparent; border-top:7px solid #c9a84c;
+  }
+  .map-pin:hover { transform:translate(-50%,-50%) scale(1.35); }
+  @keyframes pinPulse {
+    0%   { box-shadow:0 0 0 0 rgba(201,168,76,0.6); }
+    70%  { box-shadow:0 0 0 8px rgba(201,168,76,0); }
+    100% { box-shadow:0 0 0 0 rgba(201,168,76,0); }
+  }
+
   /* categorias */
   .cat-tab { background:transparent; color:rgba(255,255,255,0.45); border-color:rgba(255,255,255,0.15); cursor:pointer; }
   .cat-tab:hover { color:#fff; border-color:rgba(201,168,76,0.4); }
   .active-tab { background:rgba(201,168,76,0.12); color:#c9a84c !important; border-color:#c9a84c !important; }
-  .cat-card { background:rgba(255,255,255,0.04); border:1px solid; border-radius:10px; padding:18px 14px; display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; }
-  .cat-tier { font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; font-family:'Montserrat',sans-serif; }
-  .cat-level { font-family:'Playfair Display',serif; font-size:1.4rem; color:#fff; line-height:1.2; margin:4px 0; }
+  .cat-card { background:rgba(255,255,255,0.04); border:1px solid; border-radius:12px; padding:20px 12px 16px; display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; }
+  .cat-icon { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
+  .cat-tier { font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:700; font-family:'Montserrat',sans-serif; }
+  .cat-level { font-family:'Playfair Display',serif; font-size:1.3rem; color:#fff; line-height:1.2; margin:2px 0; }
   .cat-range { font-size:11px; color:rgba(255,255,255,0.4); font-family:'Montserrat',sans-serif; letter-spacing:1px; }
 
   .contact-card { background:rgba(255,255,255,0.04); border:1px solid rgba(201,168,76,0.2); border-radius:10px; padding:20px 20px; display:flex; flex-direction:row; align-items:center; gap:16px; transition:background 0.3s,border-color 0.3s,transform 0.3s; text-decoration:none; }
@@ -83,6 +105,30 @@
   .contact-card .cc-cta { display:none; }
   @media(min-width:480px){ .contact-card .cc-cta { display:flex; } }
 
+  /* mobile menu */
+  #mobileMenu {
+    position:fixed; left:0; right:0; z-index:48;
+    background:rgba(8,20,8,0.98); backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(201,168,76,0.15);
+    overflow:hidden; max-height:0; transition:max-height 0.35s ease, opacity 0.3s ease;
+    opacity:0;
+  }
+  #mobileMenu.open { max-height:320px; opacity:1; }
+  #mobileMenu a {
+    display:flex; align-items:center; gap:10px;
+    padding:14px 20px; font-size:11px; letter-spacing:2.5px; text-transform:uppercase;
+    font-family:'Montserrat',sans-serif; font-weight:600; color:rgba(255,255,255,0.65);
+    border-bottom:1px solid rgba(255,255,255,0.05); text-decoration:none;
+    transition:color 0.2s, background 0.2s;
+  }
+  #mobileMenu a:hover { color:#fff; background:rgba(255,255,255,0.04); }
+  #mobileMenu a.app-link {
+    color:#c9a84c; margin:12px 20px 16px; border:1px solid rgba(201,168,76,0.4);
+    border-radius:6px; justify-content:center; border-bottom:1px solid rgba(201,168,76,0.4);
+    background:rgba(201,168,76,0.08);
+  }
+  #mobileMenu a.app-link:hover { background:rgba(201,168,76,0.18); }
+
   @keyframes fadeUp { from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);} }
   .fade-up { animation:fadeUp 1s ease-out forwards; }
   .delay-1 { animation-delay:0.1s; opacity:0; }
@@ -94,25 +140,45 @@
 
 <!-- NAV -->
 <nav id="mainNav" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;">
-  <!-- izquierda: logo (oculto en el hero) -->
-  <a href="#hero" id="navLogo" style="opacity:0;pointer-events:none;transition:opacity 0.4s;justify-self:start;">
-    <img src="RECURSOS/logo.PNG" alt="Memories Padel Club" class="h-8 w-auto opacity-80 hover:opacity-100 transition-opacity"/>
-  </a>
-  <!-- centro: links -->
-  <div class="hidden md:flex space-x-8 uppercase tracking-widest text-xs font-medium">
-    <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#circuito">Tour</a>
-    <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#torneos">Torneos</a>
-    <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#redes">Redes</a>
+  <!-- Izquierda: logo desktop (oculto en hero) | hamburger móvil -->
+  <div style="justify-self:start;display:flex;align-items:center;">
+    <a href="#hero" id="navLogo" class="hidden md:block" style="opacity:0;pointer-events:none;transition:opacity 0.4s;">
+      <img src="RECURSOS/logo.PNG" alt="Memories Padel Club" class="h-8 w-auto opacity-80 hover:opacity-100 transition-opacity"/>
+    </a>
+    <button id="mobileMenuBtn" class="md:hidden flex items-center justify-center" onclick="toggleMobileMenu()" style="background:none;border:none;cursor:pointer;padding:4px;width:40px;height:40px;" aria-label="Menú">
+      <span class="material-icons" id="menuIcon" style="color:rgba(255,255,255,0.8);font-size:24px;">menu</span>
+    </button>
   </div>
-  <!-- derecha: botón app -->
+  <!-- Centro: links desktop | logo móvil (oculto en hero) -->
+  <div>
+    <div class="hidden md:flex space-x-8 uppercase tracking-widest text-xs font-medium">
+      <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#circuito">Tour</a>
+      <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#torneos">Torneos</a>
+      <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#redes">Redes</a>
+    </div>
+    <a href="#hero" id="navLogoMobile" class="md:hidden block" style="opacity:0;pointer-events:none;transition:opacity 0.4s;">
+      <img src="RECURSOS/logo.PNG" alt="Memories Padel Club" class="h-7 w-auto opacity-90"/>
+    </a>
+  </div>
+  <!-- Derecha: botón app desktop -->
   <div style="justify-self:end;">
     <a href="https://padeldoor.app/descargar" target="_blank" rel="noopener noreferrer"
-       class="inline-flex items-center gap-1.5 text-[10px] md:text-xs uppercase tracking-widest font-semibold bg-[#c9a84c] text-[#0f200f] px-3 py-2 md:px-4 rounded hover:bg-white transition-colors duration-200">
+       class="hidden md:inline-flex items-center gap-1.5 text-xs uppercase tracking-widest font-semibold bg-[#c9a84c] text-[#0f200f] px-4 py-2 rounded hover:bg-white transition-colors duration-200">
       <span class="material-icons" style="font-size:14px;">smartphone</span>
       App Torneos
     </a>
   </div>
 </nav>
+
+<!-- MENÚ MÓVIL -->
+<div id="mobileMenu">
+  <a href="#circuito" onclick="closeMobileMenu()">Tour</a>
+  <a href="#torneos" onclick="closeMobileMenu()">Torneos</a>
+  <a href="#redes" onclick="closeMobileMenu()">Redes</a>
+  <a href="https://padeldoor.app/descargar" target="_blank" rel="noopener noreferrer" class="app-link" onclick="closeMobileMenu()">
+    <span class="material-icons" style="font-size:16px;">smartphone</span>App Torneos
+  </a>
+</div>
 
 
 <!-- HERO -->
@@ -170,6 +236,30 @@
       <div class="divider"></div>
     </div>
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4" id="sedesGrid"></div>
+
+    <!-- MAPA -->
+    <div class="mt-10 md:mt-14 flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12">
+      <div class="w-full max-w-[300px] lg:max-w-[360px] flex-shrink-0 mx-auto lg:mx-0" style="position:relative;">
+        <img src="RECURSOS/Pa%C3%ADs_valenci%C3%A0.svg" alt="Mapa Comunitat Valenciana" style="width:100%;display:block;filter:invert(1) sepia(1) saturate(0.3) hue-rotate(60deg) brightness(0.55) opacity(0.9);"/>
+        <!-- Pines -->
+        <button class="map-pin" style="left:49.2%;top:45.0%;" data-city="Valencia"          data-venue="Calderona Wellness"         data-url="https://calderonawellness.com/"></button>
+        <button class="map-pin" style="left:47.2%;top:55.2%;" data-city="Alzira"            data-venue="Zoma Sports Center"         data-url="https://zomasportscenter.es/"></button>
+        <button class="map-pin" style="left:66.0%;top:65.2%;" data-city="D&eacute;nia"      data-venue="Padelpoint D&eacute;nia"    data-url="https://www.jubopadel.com/"></button>
+        <button class="map-pin" style="left:58.2%;top:72.1%;" data-city="La Nuc&iacute;a"  data-venue="Padelpoint La Nuc&iacute;a" data-url="https://padelpoint.es/"></button>
+        <button class="map-pin" style="left:57.8%;top:74.8%;" data-city="Benidorm"          data-venue="Padelpoint Meli&aacute; Villaitana" data-url="https://padelpoint.es/"></button>
+        <button class="map-pin" style="left:45.6%;top:81.1%;" data-city="Alicante"          data-venue="SportClub Alicante"         data-url="https://sportclubalicante.com/"></button>
+        <button class="map-pin" style="left:34.7%;top:76.9%;" data-city="Elda"              data-venue="Padel Lacy"                 data-url="https://padellacy.es/"></button>
+        <button class="map-pin" style="left:38.1%;top:83.6%;" data-city="Elche"             data-venue="Vola Padel Club"            data-url="https://volapadel.com/"></button>
+        <!-- Popup -->
+        <div id="mapPopup" style="display:none;position:absolute;z-index:20;min-width:160px;background:rgba(15,32,15,0.97);border:1px solid rgba(201,168,76,0.5);border-radius:10px;padding:14px 16px;pointer-events:auto;box-shadow:0 8px 32px rgba(0,0,0,0.6);">
+          <button onclick="document.getElementById('mapPopup').style.display='none'" style="position:absolute;top:6px;right:8px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:16px;cursor:pointer;line-height:1;">&times;</button>
+          <p id="popupCity" style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:4px;"></p>
+          <p id="popupVenue" style="font-family:'Playfair Display',serif;font-size:14px;color:#fff;line-height:1.3;margin-bottom:10px;"></p>
+          <a id="popupLink" href="#" target="_blank" rel="noopener noreferrer" style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#c9a84c;text-decoration:none;display:inline-flex;align-items:center;gap:4px;font-family:'Montserrat',sans-serif;font-weight:600;">Ver sede <span class="material-icons" style="font-size:11px;">open_in_new</span></a>
+        </div>
+      </div>
+      <p class="text-xs text-white/30 text-center lg:text-left lg:pt-4 leading-relaxed">Toca un punto del<br>mapa para ver la sede.</p>
+    </div>
   </div>
 </section>
 
@@ -191,67 +281,113 @@
     <div id="catGen">
       <p class="text-center text-xs text-white/40 mb-6 uppercase tracking-widest">(aptas para chicos, chicas y mixto)</p>
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        <div class="cat-card" style="border-color:rgba(201,168,76,0.6);">
+
+        <div class="cat-card" style="border-color:rgba(201,168,76,0.7);">
+          <div class="cat-icon" style="background:rgba(201,168,76,0.15);">
+            <span class="material-icons" style="font-size:26px;color:#c9a84c;">emoji_events</span>
+          </div>
           <span class="cat-tier" style="color:#c9a84c;">Premier</span>
           <span class="cat-level">2&ordf;</span>
           <span class="cat-range">4.75 &ndash; 5.5</span>
         </div>
+
         <div class="cat-card" style="border-color:rgba(180,180,220,0.6);">
+          <div class="cat-icon" style="background:rgba(180,180,220,0.12);">
+            <span class="material-icons" style="font-size:26px;color:#b0b0d8;">workspace_premium</span>
+          </div>
           <span class="cat-tier" style="color:#b0b0d8;">&Eacute;lite</span>
           <span class="cat-level">3&ordf;</span>
           <span class="cat-range">4.25 &ndash; 4.75</span>
         </div>
+
         <div class="cat-card" style="border-color:rgba(185,220,255,0.6);">
+          <div class="cat-icon" style="background:rgba(185,220,255,0.1);">
+            <span class="material-icons" style="font-size:26px;color:#a8d8f0;">diamond</span>
+          </div>
           <span class="cat-tier" style="color:#a8d8f0;">Diamante</span>
-          <span class="cat-level" style="font-size:1.2rem;">3&ordf; baja / 4&ordf; alta</span>
+          <span class="cat-level" style="font-size:1.1rem;">3&ordf; baja / 4&ordf; alta</span>
           <span class="cat-range">3.75 &ndash; 4.25</span>
         </div>
-        <div class="cat-card" style="border-color:rgba(201,168,76,0.4);">
+
+        <div class="cat-card" style="border-color:rgba(201,168,76,0.45);">
+          <div class="cat-icon" style="background:rgba(201,168,76,0.1);">
+            <span class="material-icons" style="font-size:26px;color:#c9a84c;">military_tech</span>
+          </div>
           <span class="cat-tier" style="color:#c9a84c;">Oro</span>
           <span class="cat-level">4&ordf;</span>
           <span class="cat-range">3.25 &ndash; 3.75</span>
         </div>
+
         <div class="cat-card" style="border-color:rgba(192,192,192,0.5);">
+          <div class="cat-icon" style="background:rgba(192,192,192,0.08);">
+            <span class="material-icons" style="font-size:26px;color:#c0c0c0;">military_tech</span>
+          </div>
           <span class="cat-tier" style="color:#c0c0c0;">Plata</span>
-          <span class="cat-level" style="font-size:1.2rem;">4&ordf; baja / 5&ordf; alta</span>
+          <span class="cat-level" style="font-size:1.1rem;">4&ordf; baja / 5&ordf; alta</span>
           <span class="cat-range">2.75 &ndash; 3.25</span>
         </div>
+
         <div class="cat-card" style="border-color:rgba(180,100,40,0.6);">
+          <div class="cat-icon" style="background:rgba(180,100,40,0.12);">
+            <span class="material-icons" style="font-size:26px;color:#cd7f32;">military_tech</span>
+          </div>
           <span class="cat-tier" style="color:#cd7f32;">Bronce</span>
           <span class="cat-level">5&ordf;</span>
           <span class="cat-range">2.25 &ndash; 2.75</span>
         </div>
+
         <div class="cat-card" style="border-color:rgba(100,180,100,0.4);">
+          <div class="cat-icon" style="background:rgba(100,180,100,0.1);">
+            <span class="material-icons" style="font-size:26px;color:#7ec880;">sports_tennis</span>
+          </div>
           <span class="cat-tier" style="color:#7ec880;">Iniciaci&oacute;n</span>
           <span class="cat-level">5&ordf; baja</span>
           <span class="cat-range">1.0 &ndash; 2.25</span>
         </div>
+
       </div>
     </div>
     <!-- Femeninas -->
     <div id="catFem" style="display:none;">
       <p class="text-center text-xs text-white/40 mb-6 uppercase tracking-widest">Categor&iacute;as femeninas</p>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto">
+
         <div class="cat-card" style="border-color:rgba(185,220,255,0.6);">
+          <div class="cat-icon" style="background:rgba(185,220,255,0.1);">
+            <span class="material-icons" style="font-size:26px;color:#a8d8f0;">diamond</span>
+          </div>
           <span class="cat-tier" style="color:#a8d8f0;">Diamante</span>
           <span class="cat-level">2&ordf; fem</span>
           <span class="cat-range">4.0 &ndash; 4.5</span>
         </div>
+
         <div class="cat-card" style="border-color:rgba(201,168,76,0.5);">
+          <div class="cat-icon" style="background:rgba(201,168,76,0.1);">
+            <span class="material-icons" style="font-size:26px;color:#c9a84c;">military_tech</span>
+          </div>
           <span class="cat-tier" style="color:#c9a84c;">Oro</span>
           <span class="cat-level">3&ordf; fem</span>
           <span class="cat-range">3.25 &ndash; 4.0</span>
         </div>
+
         <div class="cat-card" style="border-color:rgba(192,192,192,0.5);">
+          <div class="cat-icon" style="background:rgba(192,192,192,0.08);">
+            <span class="material-icons" style="font-size:26px;color:#c0c0c0;">military_tech</span>
+          </div>
           <span class="cat-tier" style="color:#c0c0c0;">Plata</span>
           <span class="cat-level">4&ordf; fem</span>
           <span class="cat-range">2.75 &ndash; 3.25</span>
         </div>
+
         <div class="cat-card" style="border-color:rgba(180,100,40,0.6);">
+          <div class="cat-icon" style="background:rgba(180,100,40,0.12);">
+            <span class="material-icons" style="font-size:26px;color:#cd7f32;">military_tech</span>
+          </div>
           <span class="cat-tier" style="color:#cd7f32;">Bronce</span>
           <span class="cat-level">5&ordf; fem</span>
           <span class="cat-range">2.0 &ndash; 2.75</span>
         </div>
+
       </div>
     </div>
     <div class="mt-8 text-center">
@@ -385,32 +521,69 @@
     setInterval(()=>goTo(current+1),4000);
   })();
   (function(){
-    const nav=document.getElementById('mainNav');
-    const logo=document.getElementById('navLogo');
+    const nav    = document.getElementById('mainNav');
+    const logo   = document.getElementById('navLogo');
+    const logoM  = document.getElementById('navLogoMobile');
+    const menu   = document.getElementById('mobileMenu');
     function updateNav(){
-      const heroH=document.getElementById('hero').offsetHeight;
-      const pastHero=window.scrollY>=heroH-10;
-      nav.classList.toggle('scrolled',window.scrollY>60);
-      logo.style.opacity=pastHero?'1':'0';
-      logo.style.pointerEvents=pastHero?'auto':'none';
-    }
-    // active nav link highlight
-    const sections=['circuito','categorias','torneos','redes'];
-    const navLinks=document.querySelectorAll('#mainNav a[href^="#"]');
-    const io=new IntersectionObserver(entries=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting){
-          navLinks.forEach(l=>{
-            const active=l.getAttribute('href')==='#'+e.target.id;
-            l.style.color=active?'#c9a84c':'';
-          });
-        }
+      const heroH   = document.getElementById('hero').offsetHeight;
+      const pastHero = window.scrollY >= heroH - 10;
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+      // update menu top position dynamically
+      menu.style.top = nav.offsetHeight + 'px';
+      // logo visibility
+      [logo, logoM].forEach(function(el){
+        if(!el) return;
+        el.style.opacity        = pastHero ? '1' : '0';
+        el.style.pointerEvents  = pastHero ? 'auto' : 'none';
       });
-    },{rootMargin:'-40% 0px -55% 0px'});
-    sections.forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el);});
-    window.addEventListener('scroll',updateNav,{passive:true});
+    }
+    window.addEventListener('scroll', updateNav, {passive:true});
     updateNav();
   })();
+  function toggleMobileMenu(){
+    var menu = document.getElementById('mobileMenu');
+    var icon = document.getElementById('menuIcon');
+    var open = menu.classList.toggle('open');
+    icon.textContent = open ? 'close' : 'menu';
+  }
+  function closeMobileMenu(){
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('menuIcon').textContent = 'menu';
+  }
+  // close menu on outside click
+  document.addEventListener('click', function(e){
+    var btn = document.getElementById('mobileMenuBtn');
+    var menu = document.getElementById('mobileMenu');
+    if(!menu.contains(e.target) && !btn.contains(e.target)) closeMobileMenu();
+  });
+  // Map pin interactions
+  document.querySelectorAll('.map-pin').forEach(function(pin){
+    pin.addEventListener('click', function(e){
+      e.stopPropagation();
+      var popup = document.getElementById('mapPopup');
+      document.getElementById('popupCity').textContent  = pin.dataset.city;
+      document.getElementById('popupVenue').textContent = pin.dataset.venue;
+      document.getElementById('popupLink').href         = pin.dataset.url;
+      // Position popup: prefer above pin, keep inside container
+      var container = pin.parentElement;
+      var pinL = parseFloat(pin.style.left);
+      var pinT = parseFloat(pin.style.top);
+      popup.style.display = 'block';
+      var pw = popup.offsetWidth;
+      var cw = container.offsetWidth;
+      var ch = container.offsetHeight;
+      var left = (pinL / 100) * cw - pw / 2;
+      // clamp horizontally
+      left = Math.max(4, Math.min(left, cw - pw - 4));
+      var top  = (pinT / 100) * ch - popup.offsetHeight - 20;
+      if(top < 4) top = (pinT / 100) * ch + 20;
+      popup.style.left = left + 'px';
+      popup.style.top  = top  + 'px';
+    });
+  });
+  document.addEventListener('click', function(){ document.getElementById('mapPopup').style.display='none'; });
+
   function showCat(tab){
     document.getElementById('catGen').style.display=tab==='gen'?'':'none';
     document.getElementById('catFem').style.display=tab==='fem'?'':'none';
