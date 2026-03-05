@@ -22,6 +22,7 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background-color: #1e3320; color: #fff; font-family: 'Montserrat', sans-serif; }
@@ -153,7 +154,8 @@
   <div>
     <div class="hidden md:flex space-x-8 uppercase tracking-widest text-xs font-medium">
       <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#circuito">Tour</a>
-      <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#redes">Redes</a>
+      <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="tienda.html">Tienda</a>
+      <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#redes">Comunidad</a>
     </div>
     <a href="#inicio" id="navLogoMobile" class="md:hidden block" style="opacity:0;pointer-events:none;transition:opacity 0.4s;">
       <img src="RECURSOS/logo.PNG" alt="Memories Padel Club" class="h-7 w-auto opacity-90"/>
@@ -172,7 +174,8 @@
 <!-- MENÚ MÓVIL -->
 <div id="mobileMenu">
   <a href="#circuito" onclick="closeMobileMenu()">Tour</a>
-  <a href="#redes" onclick="closeMobileMenu()">Redes</a>
+  <a href="tienda.html" onclick="closeMobileMenu()">Tienda</a>
+  <a href="#redes" onclick="closeMobileMenu()">Comunidad</a>
   <a href="https://padeldoor.app/descargar" target="_blank" rel="noopener noreferrer" class="app-link" onclick="closeMobileMenu()">
     <span class="material-icons" style="font-size:16px;">smartphone</span>App Torneos
   </a>
@@ -182,11 +185,15 @@
 <!-- INICIO -->
 <section id="inicio" class="carousel-wrap">
   <div class="carousel-track" id="carouselTrack">
-    <div class="carousel-slide"><img src="https://placehold.co/1920x1080/384e28/384e28" alt="Foto 1"/></div>
-    <div class="carousel-slide"><img src="https://placehold.co/1920x1080/384e28/384e28" alt="Foto 2"/></div>
-    <div class="carousel-slide"><img src="https://placehold.co/1920x1080/384e28/384e28" alt="Foto 3"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_7788.JPG" alt="Foto 1"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8009.JPG" alt="Foto 2"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8035.JPG" alt="Foto 3"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8351.JPG" alt="Foto 4"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8378.JPG" alt="Foto 5"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8383.JPG" alt="Foto 6"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8464.JPG" alt="Foto 7"/></div>
   </div>
-  <div class="absolute inset-0 bg-black/45 z-10 pointer-events-none"></div>
+  <div class="absolute inset-0 bg-black/60 z-10 pointer-events-none"></div>
   <div class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none fade-up delay-2">
     <img alt="Memories Padel Club" class="w-full max-w-[220px] md:max-w-[360px] h-auto drop-shadow-2xl" src="RECURSOS/logo.PNG"/>
   </div>
@@ -200,6 +207,10 @@
     <button class="carousel-dot active" data-index="0" aria-label="Slide 1"></button>
     <button class="carousel-dot" data-index="1" aria-label="Slide 2"></button>
     <button class="carousel-dot" data-index="2" aria-label="Slide 3"></button>
+    <button class="carousel-dot" data-index="3" aria-label="Slide 4"></button>
+    <button class="carousel-dot" data-index="4" aria-label="Slide 5"></button>
+    <button class="carousel-dot" data-index="5" aria-label="Slide 6"></button>
+    <button class="carousel-dot" data-index="6" aria-label="Slide 7"></button>
   </div>
 </section>
 
@@ -239,17 +250,17 @@
     <div class="flex flex-col lg:flex-row gap-10 lg:gap-14 items-start">
 
       <!-- MAPA -->
-      <div class="w-full max-w-[260px] lg:max-w-[280px] flex-shrink-0 mx-auto lg:mx-0" style="position:sticky;top:88px;">
+      <div class="w-full max-w-[260px] lg:max-w-[280px] flex-shrink-0 mx-auto lg:mx-0 lg:sticky lg:top-[88px]">
         <div style="position:relative;">
           <img src="RECURSOS/Pa%C3%ADs_valenci%C3%A0.svg" alt="Mapa Comunitat Valenciana" style="width:100%;display:block;filter:invert(1) sepia(1) saturate(0.3) hue-rotate(60deg) brightness(0.55) opacity(0.9);"/>
-          <button class="map-pin" style="left:49.2%;top:45.0%;" data-city="B&eacute;tera, Valencia"   data-venue="Calderona Wellness"              data-url="https://calderonawellness.com/"></button>
-          <button class="map-pin" style="left:47.2%;top:55.2%;" data-city="Alzira"                   data-venue="Zoma Sports Center"              data-url="https://zomasportscenter.es/"></button>
-          <button class="map-pin" style="left:66.0%;top:65.2%;" data-city="D&eacute;nia"              data-venue="Padelpoint D&eacute;nia"          data-url="https://www.jubopadel.com/"></button>
-          <button class="map-pin" style="left:58.2%;top:72.1%;" data-city="La Nuc&iacute;a, Alicante" data-venue="Padelpoint La Nuc&iacute;a"       data-url="https://padelpoint.es/"></button>
-          <button class="map-pin" style="left:57.8%;top:74.8%;" data-city="Benidorm, Alicante"        data-venue="Padelpoint Meli&aacute; Villaitana" data-url="https://padelpoint.es/"></button>
-          <button class="map-pin" style="left:45.6%;top:81.1%;" data-city="Alicante"                  data-venue="SportClub Alicante"               data-url="https://sportclubalicante.com/"></button>
-          <button class="map-pin" style="left:34.7%;top:76.9%;" data-city="Elda, Alicante"            data-venue="P&aacute;del Lacy"                data-url="https://padellacy.es/"></button>
-          <button class="map-pin" style="left:38.1%;top:83.6%;" data-city="Elche, Alicante"           data-venue="Vola P&aacute;del Estadio"        data-url="https://volapadel.com/"></button>
+          <button class="map-pin" style="left:45.8%;top:41.6%;" data-city="B&eacute;tera, Valencia"   data-venue="Calderona Wellness"                data-url="https://calderonawellness.com/"></button>
+          <button class="map-pin" style="left:47.1%;top:55.9%;" data-city="Alzira"                   data-venue="Zoma Sports Center"                data-url="https://zomasportscenter.es/"></button>
+          <button class="map-pin" style="left:65.6%;top:66.0%;" data-city="D&eacute;nia"              data-venue="Padelpoint D&eacute;nia"            data-url="https://www.jubopadel.com/"></button>
+          <button class="map-pin" style="left:57.9%;top:72.9%;" data-city="La Nuc&iacute;a, Alicante" data-venue="Padelpoint La Nuc&iacute;a"         data-url="https://padelpoint.es/"></button>
+          <button class="map-pin" style="left:57.4%;top:75.6%;" data-city="Benidorm, Alicante"        data-venue="Padelpoint Meli&aacute; Villaitana" data-url="https://padelpoint.es/"></button>
+          <button class="map-pin" style="left:45.4%;top:81.9%;" data-city="Alicante"                  data-venue="SportClub Alicante"                data-url="https://sportclubalicante.com/"></button>
+          <button class="map-pin" style="left:34.5%;top:77.7%;" data-city="Elda, Alicante"            data-venue="P&aacute;del Lacy"                 data-url="https://padellacy.es/"></button>
+          <button class="map-pin" style="left:37.9%;top:84.4%;" data-city="Elche, Alicante"           data-venue="Vola P&aacute;del Estadio"          data-url="https://volapadel.com/"></button>
           <!-- Popup -->
           <div id="mapPopup" style="display:none;position:absolute;z-index:20;min-width:160px;background:rgba(15,32,15,0.97);border:1px solid rgba(201,168,76,0.5);border-radius:10px;padding:14px 16px;pointer-events:auto;box-shadow:0 8px 32px rgba(0,0,0,0.6);">
             <button onclick="document.getElementById('mapPopup').style.display='none'" style="position:absolute;top:6px;right:8px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:16px;cursor:pointer;line-height:1;">&times;</button>
@@ -409,7 +420,7 @@
 
         <div class="cat-card" style="border-color:rgba(201,168,76,0.7);">
           <div class="cat-icon" style="background:rgba(201,168,76,0.15);">
-            <span class="material-icons" style="font-size:26px;color:#c9a84c;">emoji_events</span>
+            <span class="material-symbols-outlined" style="font-size:28px;color:#c9a84c;">crown</span>
           </div>
           <span class="cat-tier" style="color:#c9a84c;">Premier</span>
           <span class="cat-level">2&ordf;</span>
@@ -418,7 +429,7 @@
 
         <div class="cat-card" style="border-color:rgba(180,180,220,0.6);">
           <div class="cat-icon" style="background:rgba(180,180,220,0.12);">
-            <span class="material-icons" style="font-size:26px;color:#b0b0d8;">workspace_premium</span>
+            <span class="material-icons" style="font-size:26px;color:#b0b0d8;">emoji_events</span>
           </div>
           <span class="cat-tier" style="color:#b0b0d8;">&Eacute;lite</span>
           <span class="cat-level">3&ordf;</span>
@@ -436,7 +447,7 @@
 
         <div class="cat-card" style="border-color:rgba(201,168,76,0.45);">
           <div class="cat-icon" style="background:rgba(201,168,76,0.1);">
-            <span class="material-icons" style="font-size:26px;color:#c9a84c;">military_tech</span>
+            <span class="material-icons" style="font-size:26px;color:#c9a84c;">workspace_premium</span>
           </div>
           <span class="cat-tier" style="color:#c9a84c;">Oro</span>
           <span class="cat-level">4&ordf;</span>
@@ -445,7 +456,7 @@
 
         <div class="cat-card" style="border-color:rgba(192,192,192,0.5);">
           <div class="cat-icon" style="background:rgba(192,192,192,0.08);">
-            <span class="material-icons" style="font-size:26px;color:#c0c0c0;">military_tech</span>
+            <span class="material-icons" style="font-size:26px;color:#c0c0c0;">workspace_premium</span>
           </div>
           <span class="cat-tier" style="color:#c0c0c0;">Plata</span>
           <span class="cat-level" style="font-size:1.1rem;">4&ordf; baja / 5&ordf; alta</span>
@@ -454,7 +465,7 @@
 
         <div class="cat-card" style="border-color:rgba(180,100,40,0.6);">
           <div class="cat-icon" style="background:rgba(180,100,40,0.12);">
-            <span class="material-icons" style="font-size:26px;color:#cd7f32;">military_tech</span>
+            <span class="material-icons" style="font-size:26px;color:#cd7f32;">workspace_premium</span>
           </div>
           <span class="cat-tier" style="color:#cd7f32;">Bronce</span>
           <span class="cat-level">5&ordf;</span>
@@ -488,7 +499,7 @@
 
         <div class="cat-card" style="border-color:rgba(201,168,76,0.5);">
           <div class="cat-icon" style="background:rgba(201,168,76,0.1);">
-            <span class="material-icons" style="font-size:26px;color:#c9a84c;">military_tech</span>
+            <span class="material-icons" style="font-size:26px;color:#c9a84c;">workspace_premium</span>
           </div>
           <span class="cat-tier" style="color:#c9a84c;">Oro</span>
           <span class="cat-level">3&ordf; fem</span>
@@ -497,7 +508,7 @@
 
         <div class="cat-card" style="border-color:rgba(192,192,192,0.5);">
           <div class="cat-icon" style="background:rgba(192,192,192,0.08);">
-            <span class="material-icons" style="font-size:26px;color:#c0c0c0;">military_tech</span>
+            <span class="material-icons" style="font-size:26px;color:#c0c0c0;">workspace_premium</span>
           </div>
           <span class="cat-tier" style="color:#c0c0c0;">Plata</span>
           <span class="cat-level">4&ordf; fem</span>
@@ -506,7 +517,7 @@
 
         <div class="cat-card" style="border-color:rgba(180,100,40,0.6);">
           <div class="cat-icon" style="background:rgba(180,100,40,0.12);">
-            <span class="material-icons" style="font-size:26px;color:#cd7f32;">military_tech</span>
+            <span class="material-icons" style="font-size:26px;color:#cd7f32;">workspace_premium</span>
           </div>
           <span class="cat-tier" style="color:#cd7f32;">Bronce</span>
           <span class="cat-level">5&ordf; fem</span>
@@ -528,17 +539,16 @@
   <div class="max-w-4xl mx-auto">
     <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
       <div class="flex-1 text-center lg:text-left">
-        <p class="section-label">Tecnologia</p>
-        <h2 class="section-title">Gestiona tus torneos<br>desde la app</h2>
+        <p class="section-label">APP</p>
+        <h2 class="section-title">Gestiona los torneos<br>desde la app</h2>
         <p class="mt-5 text-sm text-white/55 leading-relaxed font-light max-w-md mx-auto lg:mx-0">
-          Inscribete, consulta cuadros, resultados y clasificaciones en tiempo real. Todo el Memories Padel Tour en la palma de tu mano.
+          Inscríbete, consulta cuadros, resultados y clasificaciones en tiempo real. Todo el Memories Padel Tour en la palma de tu mano.
         </p>
         <a href="https://padeldoor.app/descargar" target="_blank" rel="noopener noreferrer"
            class="inline-flex items-center gap-3 mt-8 px-7 py-3.5 bg-[#c9a84c] text-[#0f200f] text-xs uppercase tracking-widest font-semibold rounded hover:bg-white transition-colors duration-200">
           <span class="material-icons" style="font-size:18px;">smartphone</span>
           Descargar PadelDoor
         </a>
-        <p class="mt-3 text-[11px] text-white/30 uppercase tracking-wider">padeldoor.app/descargar</p>
       </div>
       <div class="hidden lg:flex flex-shrink-0 flex-col items-center gap-6">
         <div style="width:120px;height:120px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:24px;" class="flex items-center justify-center">
@@ -612,7 +622,7 @@
   (function(){
     const track=document.getElementById('carouselTrack');
     const dots=document.querySelectorAll('.carousel-dot');
-    const total=3; let current=0;
+    const total=7; let current=0;
     function goTo(i){current=(i+total)%total;track.style.transform='translateX(-'+current*100+'%)';dots.forEach((d,j)=>d.classList.toggle('active',j===current));}
     dots.forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.index)));
     // swipe support
@@ -666,7 +676,6 @@
       document.getElementById('popupCity').textContent  = pin.dataset.city;
       document.getElementById('popupVenue').textContent = pin.dataset.venue;
       document.getElementById('popupLink').href         = pin.dataset.url;
-      // Position popup: prefer above pin, keep inside container
       var container = pin.parentElement;
       var pinL = parseFloat(pin.style.left);
       var pinT = parseFloat(pin.style.top);
@@ -675,7 +684,6 @@
       var cw = container.offsetWidth;
       var ch = container.offsetHeight;
       var left = (pinL / 100) * cw - pw / 2;
-      // clamp horizontally
       left = Math.max(4, Math.min(left, cw - pw - 4));
       var top  = (pinT / 100) * ch - popup.offsetHeight - 20;
       if(top < 4) top = (pinT / 100) * ch + 20;
