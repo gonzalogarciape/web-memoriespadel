@@ -10,9 +10,9 @@
 <link rel="apple-touch-icon" sizes="180x180" href="RECURSOS/favicon/apple-touch-icon.png" />
 <meta name="apple-mobile-web-app-title" content="Memories Padel Club" />
 <link rel="manifest" href="RECURSOS/favicon/site.webmanifest" />
-<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="fd619e82f56ffd1d24d3610c6825e300" data-blockingmode="manual" type="text/javascript"></script>
-<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-<script>
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="fd619e82f56ffd1d24d3610c6825e300" data-blockingmode="auto" type="text/javascript"></script>
+<script data-cookieconsent="ignore" src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script data-cookieconsent="ignore">
   tailwind.config = {
     theme: {
       extend: {
@@ -25,12 +25,12 @@
     },
   };
 </script>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link data-cookieconsent="ignore" href="https://fonts.googleapis.com" rel="preconnect"/>
+<link data-cookieconsent="ignore" crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link data-cookieconsent="ignore" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<link data-cookieconsent="ignore" href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link data-cookieconsent="ignore" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link data-cookieconsent="ignore" rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background-color: #1e3320; color: #fff; font-family: 'Montserrat', sans-serif; }
@@ -49,9 +49,7 @@
   }
   #mainNav a { transition: color 0.2s; }
 
-  /* Offset para navbar fija al navegar por anclas */
-  section[id] { scroll-margin-top: 64px; }
-  @media(min-width:768px){ section[id] { scroll-margin-top: 72px; } }
+  /* scroll-margin-top se aplica dinámicamente via JS según la altura real del nav */
 
   .carousel-wrap { position: relative; width: 100%; height: 100vh; overflow: hidden; }
   .carousel-track { display: flex; height: 100%; transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
@@ -140,13 +138,18 @@
 
   /* mobile menu */
   #mobileMenu {
-    position:fixed; left:0; right:0; z-index:48;
+    position:fixed; left:0; right:0; z-index:49;
     background:rgba(8,20,8,0.98); backdrop-filter:blur(14px);
     border-bottom:1px solid rgba(201,168,76,0.15);
     overflow:hidden; max-height:0; transition:max-height 0.35s ease, opacity 0.3s ease;
     opacity:0;
   }
   #mobileMenu.open { max-height:320px; opacity:1; }
+  #menuOverlay {
+    display:none; position:fixed; inset:0; z-index:48;
+    background:rgba(0,0,0,0.72);
+  }
+  #menuOverlay.open { display:block; }
   #mobileMenu a {
     display:flex; align-items:center; gap:10px;
     padding:14px 20px; font-size:11px; letter-spacing:2.5px; text-transform:uppercase;
@@ -185,9 +188,9 @@
   <!-- Centro: links desktop | logo móvil (oculto en hero) -->
   <div>
     <div class="hidden md:flex space-x-8 uppercase tracking-widest text-xs font-medium">
-      <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#circuito">Tour</a>
+      <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#tour">Tour</a>
       <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="tienda.html">Tienda</a>
-      <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#redes">Comunidad</a>
+      <a class="text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1" href="#comunidad">Comunidad</a>
     </div>
     <a href="#inicio" id="navLogoMobile" class="md:hidden block" style="opacity:0;pointer-events:none;transition:opacity 0.4s;">
       <img src="RECURSOS/logo.PNG" alt="Memories Padel Club" class="h-7 w-auto opacity-90"/>
@@ -205,13 +208,14 @@
 
 <!-- MENÚ MÓVIL -->
 <div id="mobileMenu">
-  <a href="#circuito" onclick="closeMobileMenu()">Tour</a>
+  <a href="#tour" onclick="closeMobileMenu()">Tour</a>
   <a href="tienda.html" onclick="closeMobileMenu()">Tienda</a>
-  <a href="#redes" onclick="closeMobileMenu()">Comunidad</a>
+  <a href="#comunidad" onclick="closeMobileMenu()">Comunidad</a>
   <a href="https://padeldoor.app/descargar" target="_blank" rel="noopener noreferrer" class="app-link" onclick="closeMobileMenu()">
     <span class="material-icons" style="font-size:16px;">smartphone</span>App Torneos
   </a>
 </div>
+<div id="menuOverlay" onclick="closeMobileMenu()"></div>
 
 
 <!-- INICIO -->
@@ -231,7 +235,7 @@
     <img alt="Memories Padel Club" class="w-full max-w-[220px] md:max-w-[360px] h-auto drop-shadow-2xl" src="RECURSOS/logo.PNG"/>
   </div>
   <div class="absolute bottom-16 left-0 right-0 z-30 flex justify-center">
-    <a href="#circuito" class="text-white/40 hover:text-white transition-colors flex flex-col items-center gap-1">
+    <a href="#tour" class="text-white/40 hover:text-white transition-colors flex flex-col items-center gap-1">
       <span class="text-[10px] uppercase tracking-widest">Descubre</span>
       <span class="material-icons animate-bounce" style="font-size:20px;">keyboard_arrow_down</span>
     </a>
@@ -249,8 +253,8 @@
 </section>
 
 
-<!-- EL CIRCUITO -->
-<section id="circuito" class="sec-pad" style="background:linear-gradient(160deg,#0f200f 0%,#2b4a1e 60%,#1a3a16 100%);">
+<!-- EL TOUR -->
+<section id="tour" class="sec-pad" style="background:linear-gradient(160deg,#0f200f 0%,#2b4a1e 60%,#1a3a16 100%);">
   <div class="max-w-4xl mx-auto text-center">
     <img src="RECURSOS/memories padel tour blanco VECTORIZADO.png" alt="Memories Padel Tour" class="fade-up delay-2 mx-auto w-full max-w-[220px] md:max-w-[360px] h-auto drop-shadow-2xl"/>
     <p class="fade-up delay-3 mt-6 text-sm text-white/60 leading-relaxed tracking-wide font-light max-w-xl mx-auto">
@@ -748,8 +752,8 @@
 </section>
 
 
-<!-- REDES -->
-<section id="redes" class="sec-pad" style="background:#162a12; background-image:url('RECURSOS/comunidad/comunidad.JPG'); background-size:cover; background-position:center; background-repeat:no-repeat; position:relative;">
+<!-- COMUNIDAD -->
+<section id="comunidad" class="sec-pad" style="background:#162a12; background-image:url('RECURSOS/comunidad/comunidad.JPG'); background-size:cover; background-position:center; background-repeat:no-repeat; position:relative;">
   <div style="position:absolute;inset:0;background:rgba(0,0,0,0.72);pointer-events:none;"></div>
   <div class="max-w-3xl mx-auto text-center" style="position:relative;z-index:1;">
     <p class="section-label">Comunidad</p>
@@ -789,17 +793,18 @@
 
 
 <!-- FOOTER -->
-<footer class="w-full py-8 text-center bg-[#0a1a08] text-white/30 text-xs tracking-widest uppercase font-light border-t border-white/5">
-  <div class="flex flex-col items-center justify-center space-y-3">
-    <img src="RECURSOS/logo.PNG" alt="Logo" class="h-8 w-auto opacity-25 mb-1"/>
-    <p>2026 Memories Padel Club. All Rights Reserved.</p>
-    <div class="flex space-x-4 text-[10px]">
+<footer class="w-full py-6 text-center bg-[#0a1a08] text-white/30 tracking-widest uppercase font-light border-t border-white/5">
+  <div class="flex flex-col items-center justify-center space-y-3 px-4">
+    <img src="RECURSOS/logo.PNG" alt="Logo" class="h-7 w-auto opacity-25"/>
+    <p class="text-[9px] md:text-[10px]">Memories Padel Club. All Rights Reserved.</p>
+    <div class="flex flex-col items-center gap-2 md:flex-row md:gap-0 md:space-x-4 text-[9px] md:text-[10px]">
       <a class="hover:text-white/60 transition-colors" href="https://shop.memoriespadel.es/policies/privacy-policy" target="_blank" rel="noopener noreferrer">Política de privacidad</a>
-      <span>|</span>
+      <span class="hidden md:inline">|</span>
       <a class="hover:text-white/60 transition-colors" href="https://shop.memoriespadel.es/policies/terms-of-service" target="_blank" rel="noopener noreferrer">Términos</a>
-      <span class="text-white/20">·</span>
+      <span class="hidden md:inline text-white/20">·</span>
       <a class="hover:text-white/60 transition-colors" href="https://shop.memoriespadel.es/policies/refund-policy" target="_blank" rel="noopener noreferrer">Devoluciones</a>
     </div>
+    <p class="text-[8px] md:text-[9px] text-white/15 tracking-widest">Web design by <a href="https://www.instagram.com/gonzalogarcia98" target="_blank" rel="noopener noreferrer" class="hover:text-white/40 transition-colors">@gonzalogarcia98</a></p>
   </div>
 </footer>
 
@@ -823,12 +828,20 @@
     const logo   = document.getElementById('navLogo');
     const logoM  = document.getElementById('navLogoMobile');
     const menu   = document.getElementById('mobileMenu');
+    function updateScrollMargins(){
+      var navH = nav.offsetHeight;
+      document.querySelectorAll('section[id]').forEach(function(s){
+        s.style.scrollMarginTop = navH + 'px';
+      });
+      menu.style.top = navH + 'px';
+    }
     function updateNav(){
+      const navH    = nav.offsetHeight;
       const heroH   = document.getElementById('inicio').offsetHeight;
-      const pastHero = window.scrollY >= heroH - 10;
-      nav.classList.toggle('scrolled', window.scrollY > 60);
+      const pastHero = window.scrollY >= heroH - navH - 4;
+      nav.classList.toggle('scrolled', window.scrollY > 60 || pastHero);
       // update menu top position dynamically
-      menu.style.top = nav.offsetHeight + 'px';
+      menu.style.top = navH + 'px';
       // logo visibility
       [logo, logoM].forEach(function(el){
         if(!el) return;
@@ -837,17 +850,25 @@
       });
     }
     window.addEventListener('scroll', updateNav, {passive:true});
+    window.addEventListener('resize', function(){ updateScrollMargins(); updateNav(); });
+    updateScrollMargins();
     updateNav();
   })();
   function toggleMobileMenu(){
     var menu = document.getElementById('mobileMenu');
     var icon = document.getElementById('menuIcon');
+    var nav  = document.getElementById('mainNav');
     var open = menu.classList.toggle('open');
+    document.getElementById('menuOverlay').classList.toggle('open', open);
+    nav.classList.toggle('scrolled', open || window.scrollY > 60);
     icon.textContent = open ? 'close' : 'menu';
   }
   function closeMobileMenu(){
     document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('menuOverlay').classList.remove('open');
     document.getElementById('menuIcon').textContent = 'menu';
+    var nav = document.getElementById('mainNav');
+    if(window.scrollY <= 60) nav.classList.remove('scrolled');
   }
   // close menu on outside click
   document.addEventListener('click', function(e){
@@ -897,6 +918,12 @@
     });
 
     map.fitBounds([[37.5, -1.1], [39.8, 0.3]], {padding:[20,20]});
+
+    // Preload logos so popups open instantly
+    sedes.forEach(function(s) {
+      var img = new Image();
+      img.src = s.logo;
+    });
   })();
 
   function showCat(tab){
