@@ -4,6 +4,12 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Memories Padel Club</title>
+<link rel="icon" type="image/png" href="RECURSOS/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="RECURSOS/favicon/favicon.svg" />
+<link rel="shortcut icon" href="RECURSOS/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="RECURSOS/favicon/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="Memories Padel Club" />
+<link rel="manifest" href="RECURSOS/favicon/site.webmanifest" />
 <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
 <script>
   tailwind.config = {
@@ -23,6 +29,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background-color: #1e3320; color: #fff; font-family: 'Montserrat', sans-serif; }
@@ -56,35 +63,55 @@
   .sec-pad { padding: 64px 20px; }
   @media(min-width:768px){ .sec-pad { padding: 96px 32px; } }
 
-  .sede-card { background:rgba(255,255,255,0.04); border:1px solid rgba(201,168,76,0.2); border-radius:8px; padding:20px 16px; transition:background 0.3s,border-color 0.3s,transform 0.3s; text-decoration:none; display:flex; flex-direction:column; gap:6px; min-height:110px; }
-  @media(min-width:768px){ .sede-card { padding:28px 24px; } }
-  .sede-card:hover { background:rgba(201,168,76,0.08); border-color:rgba(201,168,76,0.5); transform:translateY(-2px); }
-  .sede-card:active { background:rgba(201,168,76,0.12); transform:scale(0.98); }
-  .sede-card .city-tag { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:#c9a84c; font-weight:600; }
-  .sede-card .venue-title { font-family:'Playfair Display',serif; font-size:15px; color:#fff; font-weight:600; line-height:1.3; }
-  .sede-card .venue-arrow { margin-top:auto; padding-top:8px; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.3); display:flex; align-items:center; gap:4px; transition:color 0.2s; }
-  .sede-card:hover .venue-arrow { color:#c9a84c; }
+  .sede-card { position:relative; overflow:hidden; border:1px solid rgba(201,168,76,0.2); border-radius:8px; text-decoration:none; display:block; min-height:150px; transition:border-color 0.3s,transform 0.3s; }
+  @media(min-width:768px){ .sede-card { min-height:180px; } }
+  .sede-card:hover { border-color:rgba(201,168,76,0.5); transform:translateY(-2px); }
+  .sede-card:active { transform:scale(0.98); }
+  .sede-card-img { width:100%; height:100%; min-height:150px; object-fit:cover; display:block; transition:transform 0.5s ease; }
+  @media(min-width:768px){ .sede-card-img { min-height:180px; } }
+  .sede-card:hover .sede-card-img { transform:scale(1.06); }
+  .sede-card-body { position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 50%); display:flex; align-items:flex-end; justify-content:center; padding:14px; opacity:0; transition:opacity 0.3s; }
+  .sede-card:hover .sede-card-body { opacity:1; }
+  .venue-arrow { font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:700; font-family:'Montserrat',sans-serif; color:#fff; background:rgba(201,168,76,0.9); padding:6px 14px; border-radius:4px; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; }
+  @media(max-width:480px){ .venue-arrow { font-size:9px; padding:5px 11px; letter-spacing:1.5px; } }
 
-  /* map pins */
-  .map-pin {
-    position:absolute; transform:translate(-50%,-50%);
-    width:14px; height:14px; border-radius:50%;
-    background:#c9a84c; border:2px solid #fff;
-    box-shadow:0 0 0 0 rgba(201,168,76,0.6);
-    cursor:pointer; padding:0;
-    animation:pinPulse 2.4s infinite;
-    transition:transform 0.15s;
+  /* Leaflet — tema oscuro verde */
+  #sedesMap .leaflet-tile-pane { filter: hue-rotate(88deg) saturate(0.55) brightness(0.72) contrast(1.05); }
+  .logo-popup .leaflet-popup-content-wrapper {
+    background:rgba(10,26,8,0.97) !important;
+    border:1px solid rgba(201,168,76,0.5) !important;
+    border-radius:10px !important;
+    box-shadow:0 8px 32px rgba(0,0,0,0.65) !important;
+    padding:16px !important;
   }
-  .map-pin::after {
+  .logo-popup .leaflet-popup-tip-container { display:none !important; }
+  .logo-popup .leaflet-popup-content-wrapper { width:auto !important; max-width:none !important; }
+  .logo-popup .leaflet-popup-content { margin:0 !important; line-height:0; width:auto !important; max-width:none !important; }
+  .lf-logo-popup { width:150px !important; height:auto !important; display:block !important; object-fit:contain; max-width:none !important; }
+  /* Pin dorado clásico */
+  .lf-pin {
+    width:16px; height:16px; border-radius:50%;
+    background:#c9a84c; border:2.5px solid #fff;
+    box-shadow:0 0 0 0 rgba(201,168,76,0.6);
+    cursor:pointer;
+    animation:lfPinPulse 2.4s infinite;
+    transition:transform 0.15s;
+    position:relative;
+  }
+  .lf-pin::after {
     content:''; position:absolute; bottom:-7px; left:50%; transform:translateX(-50%);
     border-left:5px solid transparent; border-right:5px solid transparent; border-top:7px solid #c9a84c;
   }
-  .map-pin:hover { transform:translate(-50%,-50%) scale(1.35); }
-  @keyframes pinPulse {
+  .lf-pin:hover { transform:scale(1.35); }
+  @keyframes lfPinPulse {
     0%   { box-shadow:0 0 0 0 rgba(201,168,76,0.6); }
     70%  { box-shadow:0 0 0 8px rgba(201,168,76,0); }
     100% { box-shadow:0 0 0 0 rgba(201,168,76,0); }
   }
+  .leaflet-control-zoom a { background:rgba(10,26,8,0.9) !important; color:#c9a84c !important; border-color:rgba(201,168,76,0.3) !important; font-size:16px !important; }
+  .leaflet-control-zoom a:hover { background:rgba(201,168,76,0.15) !important; }
+  .leaflet-control-zoom { border:1px solid rgba(201,168,76,0.3) !important; }
+  .leaflet-close-popup { display:none !important; }
 
   /* categorias */
   .cat-tab { background:transparent; color:rgba(255,255,255,0.45); border-color:rgba(255,255,255,0.15); cursor:pointer; }
@@ -185,13 +212,14 @@
 <!-- INICIO -->
 <section id="inicio" class="carousel-wrap">
   <div class="carousel-track" id="carouselTrack">
-    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_7788.JPG" alt="Foto 1"/></div>
-    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8009.JPG" alt="Foto 2"/></div>
-    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8035.JPG" alt="Foto 3"/></div>
-    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8351.JPG" alt="Foto 4"/></div>
-    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8378.JPG" alt="Foto 5"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_3470.JPG" alt="Foto 1"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_7166.JPG" alt="Foto 2"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_7866.JPG" alt="Foto 3"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8009.JPG" alt="Foto 4"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8189.JPG" alt="Foto 5"/></div>
     <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8383.JPG" alt="Foto 6"/></div>
-    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_8464.JPG" alt="Foto 7"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_9099.JPG" alt="Foto 7"/></div>
+    <div class="carousel-slide"><img src="RECURSOS/carrusel/DSC_9169.JPG" alt="Foto 8"/></div>
   </div>
   <div class="absolute inset-0 bg-black/60 z-10 pointer-events-none"></div>
   <div class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none fade-up delay-2">
@@ -211,6 +239,7 @@
     <button class="carousel-dot" data-index="4" aria-label="Slide 5"></button>
     <button class="carousel-dot" data-index="5" aria-label="Slide 6"></button>
     <button class="carousel-dot" data-index="6" aria-label="Slide 7"></button>
+    <button class="carousel-dot" data-index="7" aria-label="Slide 8"></button>
   </div>
 </section>
 
@@ -218,19 +247,146 @@
 <!-- EL CIRCUITO -->
 <section id="circuito" class="sec-pad" style="background:linear-gradient(160deg,#0f200f 0%,#2b4a1e 60%,#1a3a16 100%);">
   <div class="max-w-4xl mx-auto text-center">
-    <p class="section-label fade-up delay-1">Temporada 2026</p>
-    <h1 class="fade-up delay-2" style="font-family:'Great Vibes',cursive;font-size:clamp(3rem,8vw,5.5rem);line-height:1.1;text-shadow:0 4px 24px rgba(0,0,0,0.5);">
-      Memories Padel Tour
-    </h1>
+    <img src="RECURSOS/memories padel tour blanco VECTORIZADO.png" alt="Memories Padel Tour" class="fade-up delay-2 mx-auto w-full max-w-[220px] md:max-w-[360px] h-auto drop-shadow-2xl"/>
     <p class="fade-up delay-3 mt-6 text-sm text-white/60 leading-relaxed tracking-wide font-light max-w-xl mx-auto">
-      El circuito de padel de referencia de la Comunitat Valenciana.<br>Ocho sedes exclusivas, una sola competicion.
+      El circuito de pádel de referencia de la Comunitat Valenciana.
     </p>
-    <div class="divider"></div>
-    <div class="mt-10 md:mt-16 grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
-      <div class="text-center"><p style="font-family:'Playfair Display',serif;font-size:2.5rem;color:#c9a84c;">8</p><p class="text-xs uppercase tracking-widest text-white/50 mt-1">Sedes</p></div>
-      <div class="text-center"><p style="font-family:'Playfair Display',serif;font-size:2.5rem;color:#c9a84c;">3</p><p class="text-xs uppercase tracking-widest text-white/50 mt-1">Provincias</p></div>
-      <div class="text-center"><p style="font-family:'Playfair Display',serif;font-size:2.5rem;color:#c9a84c;">2026</p><p class="text-xs uppercase tracking-widest text-white/50 mt-1">Temporada</p></div>
-      <div class="text-center"><p style="font-family:'Playfair Display',serif;font-size:2.5rem;color:#c9a84c;">&#8734;</p><p class="text-xs uppercase tracking-widest text-white/50 mt-1">Pasion</p></div>
+  </div>
+</section>
+
+
+<!-- EXPERIENCIA COMPLETA -->
+<section class="sec-pad" style="background:#0d1a0d;">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-10 md:mb-14">
+      <p class="section-label">Mucho más que un torneo</p>
+      <h2 class="section-title">La experiencia completa</h2>
+    </div>
+
+    <style>
+      /* ── Experiencia grid ── */
+      .exp-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+      .exp-card {
+        flex: 0 0 calc(25% - 8px);
+        height: 240px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        cursor: default;
+      }
+      /* Tablet */
+      @media(max-width:900px){
+        .exp-card { flex: 0 0 calc(50% - 5px); height: 200px; }
+      }
+      /* Móvil */
+      @media(max-width:480px){
+        .exp-card { flex: 0 0 calc(50% - 5px); height: 170px; }
+      }
+      .exp-card img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+        display: block;
+      }
+      .exp-card:hover img { transform: scale(1.05); }
+      .exp-card-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.10) 50%, transparent 100%);
+        display: flex; flex-direction: column;
+        align-items: flex-start; justify-content: flex-end;
+        padding: 14px 16px;
+        transition: background 0.3s;
+      }
+      .exp-card:hover .exp-card-overlay {
+        background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 55%, transparent 100%);
+      }
+      .exp-card-icon {
+        font-size: 18px; color: #c9a84c;
+        margin-bottom: 4px; opacity: 0.9;
+      }
+      .exp-card-label {
+        font-size: clamp(10px, 1.4vw, 13px);
+        font-weight: 600;
+        letter-spacing: 0.07em; text-transform: uppercase;
+        color: #fff; line-height: 1.2;
+      }
+      .exp-card-desc {
+        font-size: clamp(9px, 1.1vw, 11px);
+        color: rgba(255,255,255,0.55);
+        margin-top: 3px; letter-spacing: 0.02em;
+      }
+    </style>
+
+    <div class="exp-grid">
+
+      <!-- Card grande: Partido Exhibición -->
+      <div class="exp-card exp-c1">
+        <img src="RECURSOS/experiencia-completa/Partido exhibición.JPG" alt="Partido de Exhibición"/>
+        <div class="exp-card-overlay">
+          <span class="material-icons exp-card-icon">sports_tennis</span>
+          <span class="exp-card-label">Partido de Exhibición</span>
+        </div>
+      </div>
+
+      <!-- DJ -->
+      <div class="exp-card exp-c2">
+        <img src="RECURSOS/experiencia-completa/Dj.JPG" alt="DJ"/>
+        <div class="exp-card-overlay">
+          <span class="material-icons exp-card-icon">headphones</span>
+          <span class="exp-card-label">DJ en directo</span>
+        </div>
+      </div>
+
+      <!-- Fotógrafo -->
+      <div class="exp-card exp-c3">
+        <img src="RECURSOS/experiencia-completa/Fotógrafo.JPG" alt="Fotógrafo"/>
+        <div class="exp-card-overlay">
+          <span class="material-icons exp-card-icon">photo_camera</span>
+          <span class="exp-card-label">Fotógrafo oficial</span>
+        </div>
+      </div>
+
+      <!-- Fisioterapeuta -->
+      <div class="exp-card exp-c4">
+        <img src="RECURSOS/experiencia-completa/Fisioterapeuta.JPG" alt="Fisioterapeuta"/>
+        <div class="exp-card-overlay">
+          <span class="material-icons exp-card-icon">self_improvement</span>
+          <span class="exp-card-label">Fisioterapeuta</span>
+        </div>
+      </div>
+
+      <!-- Ropa -->
+      <div class="exp-card exp-c5">
+        <img src="RECURSOS/experiencia-completa/Ropa Memories Padel Club.JPEG" alt="Ropa Memories"/>
+        <div class="exp-card-overlay">
+          <span class="material-icons exp-card-icon">checkroom</span>
+          <span class="exp-card-label">Ropa oficial</span>
+        </div>
+      </div>
+
+      <!-- Tardeo -->
+      <div class="exp-card exp-c6">
+        <img src="RECURSOS/experiencia-completa/Tardeo.JPG" alt="Tardeo"/>
+        <div class="exp-card-overlay">
+          <span class="material-icons exp-card-icon">local_bar</span>
+          <span class="exp-card-label">Tardeo</span>
+        </div>
+      </div>
+
+      <!-- App -->
+      <div class="exp-card exp-c7" style="background:#0f1f0f;">
+        <img src="RECURSOS/padeldoor/Logo Padeldoor.png" alt="App del Torneo" style="object-fit:contain;padding:28px;"/>
+        <div class="exp-card-overlay" style="background:linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);">
+          <span class="material-icons exp-card-icon">smartphone</span>
+          <span class="exp-card-label">App del torneo</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -249,26 +405,9 @@
     <!-- Layout dos columnas: mapa izq + torneos der -->
     <div class="flex flex-col lg:flex-row gap-10 lg:gap-14 items-start">
 
-      <!-- MAPA -->
-      <div class="w-full max-w-[260px] lg:max-w-[280px] flex-shrink-0 mx-auto lg:mx-0 lg:sticky lg:top-[88px]">
-        <div style="position:relative;">
-          <img src="RECURSOS/Pa%C3%ADs_valenci%C3%A0.svg" alt="Mapa Comunitat Valenciana" style="width:100%;display:block;filter:invert(1) sepia(1) saturate(0.3) hue-rotate(60deg) brightness(0.55) opacity(0.9);"/>
-          <button class="map-pin" style="left:45.8%;top:41.6%;" data-city="B&eacute;tera, Valencia"   data-venue="Calderona Wellness"                data-url="https://calderonawellness.com/"></button>
-          <button class="map-pin" style="left:47.1%;top:55.9%;" data-city="Alzira"                   data-venue="Zoma Sports Center"                data-url="https://zomasportscenter.es/"></button>
-          <button class="map-pin" style="left:65.6%;top:66.0%;" data-city="D&eacute;nia"              data-venue="Padelpoint D&eacute;nia"            data-url="https://www.jubopadel.com/"></button>
-          <button class="map-pin" style="left:57.9%;top:72.9%;" data-city="La Nuc&iacute;a, Alicante" data-venue="Padelpoint La Nuc&iacute;a"         data-url="https://padelpoint.es/"></button>
-          <button class="map-pin" style="left:57.4%;top:75.6%;" data-city="Benidorm, Alicante"        data-venue="Padelpoint Meli&aacute; Villaitana" data-url="https://padelpoint.es/"></button>
-          <button class="map-pin" style="left:45.4%;top:81.9%;" data-city="Alicante"                  data-venue="SportClub Alicante"                data-url="https://sportclubalicante.com/"></button>
-          <button class="map-pin" style="left:34.5%;top:77.7%;" data-city="Elda, Alicante"            data-venue="P&aacute;del Lacy"                 data-url="https://padellacy.es/"></button>
-          <button class="map-pin" style="left:37.9%;top:84.4%;" data-city="Elche, Alicante"           data-venue="Vola P&aacute;del Estadio"          data-url="https://volapadel.com/"></button>
-          <!-- Popup -->
-          <div id="mapPopup" style="display:none;position:absolute;z-index:20;min-width:160px;background:rgba(15,32,15,0.97);border:1px solid rgba(201,168,76,0.5);border-radius:10px;padding:14px 16px;pointer-events:auto;box-shadow:0 8px 32px rgba(0,0,0,0.6);">
-            <button onclick="document.getElementById('mapPopup').style.display='none'" style="position:absolute;top:6px;right:8px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:16px;cursor:pointer;line-height:1;">&times;</button>
-            <p id="popupCity"  style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;font-family:'Montserrat',sans-serif;margin-bottom:4px;"></p>
-            <p id="popupVenue" style="font-family:'Playfair Display',serif;font-size:14px;color:#fff;line-height:1.3;margin-bottom:10px;"></p>
-            <a id="popupLink" href="#" target="_blank" rel="noopener noreferrer" style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#c9a84c;text-decoration:none;display:inline-flex;align-items:center;gap:4px;font-family:'Montserrat',sans-serif;font-weight:600;">Ver sede <span class="material-icons" style="font-size:11px;">open_in_new</span></a>
-          </div>
-        </div>
+      <!-- MAPA LEAFLET -->
+      <div class="w-full lg:max-w-[380px] flex-shrink-0 mx-auto lg:mx-0 lg:sticky lg:top-[88px]">
+        <div id="sedesMap" style="width:100%;height:520px;border-radius:12px;border:1px solid rgba(201,168,76,0.2);overflow:hidden;"></div>
         <p class="text-xs text-white/30 text-center mt-3 leading-relaxed">Toca un punto para ver la sede.</p>
       </div>
 
@@ -290,9 +429,7 @@
                 <p style="font-family:'Playfair Display',serif;font-size:15px;color:#fff;line-height:1.3;margin-top:2px;">P&aacute;del Lacy</p>
                 <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.5px;">Elda, Alicante</p>
               </div>
-              <a href="https://padellacy.es/" target="_blank" rel="noopener noreferrer" style="flex-shrink:0;color:rgba(255,255,255,0.2);transition:color 0.2s;" onmouseover="this.style.color='#c9a84c'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">
-                <span class="material-icons" style="font-size:18px;">arrow_forward</span>
-              </a>
+
             </div>
 
             <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 18px;" class="flex items-center gap-4">
@@ -305,9 +442,7 @@
                 <p style="font-family:'Playfair Display',serif;font-size:15px;color:#fff;line-height:1.3;margin-top:2px;">SportClub Alicante</p>
                 <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.5px;">Alicante</p>
               </div>
-              <a href="https://sportclubalicante.com/" target="_blank" rel="noopener noreferrer" style="flex-shrink:0;color:rgba(255,255,255,0.2);transition:color 0.2s;" onmouseover="this.style.color='#c9a84c'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">
-                <span class="material-icons" style="font-size:18px;">arrow_forward</span>
-              </a>
+
             </div>
 
             <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 18px;" class="flex items-center gap-4">
@@ -320,9 +455,7 @@
                 <p style="font-family:'Playfair Display',serif;font-size:15px;color:#fff;line-height:1.3;margin-top:2px;">Calderona Wellness</p>
                 <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.5px;">B&eacute;tera, Valencia</p>
               </div>
-              <a href="https://calderonawellness.com/" target="_blank" rel="noopener noreferrer" style="flex-shrink:0;color:rgba(255,255,255,0.2);transition:color 0.2s;" onmouseover="this.style.color='#c9a84c'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">
-                <span class="material-icons" style="font-size:18px;">arrow_forward</span>
-              </a>
+
             </div>
 
           </div>
@@ -343,24 +476,19 @@
                 <p style="font-family:'Playfair Display',serif;font-size:15px;color:#fff;line-height:1.3;margin-top:2px;">Padelpoint La Nuc&iacute;a</p>
                 <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.5px;">La Nuc&iacute;a, Alicante</p>
               </div>
-              <a href="https://padelpoint.es/" target="_blank" rel="noopener noreferrer" style="flex-shrink:0;color:rgba(255,255,255,0.2);transition:color 0.2s;" onmouseover="this.style.color='#c9a84c'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">
-                <span class="material-icons" style="font-size:18px;">arrow_forward</span>
-              </a>
             </div>
 
             <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 18px;" class="flex items-center gap-4">
               <div style="flex-shrink:0;min-width:64px;text-align:center;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:8px 6px;">
-                <p style="font-family:'Playfair Display',serif;font-size:18px;color:#c9a84c;line-height:1;">17 &ndash; 19</p>
+                <p style="font-family:'Playfair Display',serif;font-size:18px;color:#c9a84c;line-height:1;">18 &ndash; 19</p>
                 <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:2px;">Abr</p>
               </div>
               <div class="flex-1 min-w-0">
                 <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;font-family:'Montserrat',sans-serif;">Torneo V</p>
-                <p style="font-family:'Playfair Display',serif;font-size:15px;color:#fff;line-height:1.3;margin-top:2px;">Vola P&aacute;del Estadio</p>
-                <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.5px;">Elche, Alicante</p>
+                <p style="font-family:'Playfair Display',serif;font-size:15px;color:#fff;line-height:1.3;margin-top:2px;">Padelpoint D&eacute;nia</p>
+                <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.5px;">D&eacute;nia, Alicante</p>
               </div>
-              <a href="https://volapadel.com/" target="_blank" rel="noopener noreferrer" style="flex-shrink:0;color:rgba(255,255,255,0.2);transition:color 0.2s;" onmouseover="this.style.color='#c9a84c'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">
-                <span class="material-icons" style="font-size:18px;">arrow_forward</span>
-              </a>
+
             </div>
 
             <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 18px;" class="flex items-center gap-4">
@@ -373,9 +501,48 @@
                 <p style="font-family:'Playfair Display',serif;font-size:15px;color:#fff;line-height:1.3;margin-top:2px;">Padelpoint Meli&aacute; Villaitana</p>
                 <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.5px;">Benidorm, Alicante</p>
               </div>
-              <a href="https://padelpoint.es/" target="_blank" rel="noopener noreferrer" style="flex-shrink:0;color:rgba(255,255,255,0.2);transition:color 0.2s;" onmouseover="this.style.color='#c9a84c'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">
-                <span class="material-icons" style="font-size:18px;">arrow_forward</span>
-              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- MURCIA -->
+        <div class="mt-8">
+          <p class="text-[10px] uppercase tracking-[3px] text-[#c9a84c] font-semibold mb-4">Mayo 2026</p>
+          <div class="flex flex-col gap-3">
+
+            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 18px;" class="flex items-center gap-4">
+              <div style="flex-shrink:0;min-width:64px;text-align:center;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:8px 6px;">
+                <p style="font-family:'Playfair Display',serif;font-size:18px;color:#c9a84c;line-height:1;">29 &ndash; 31</p>
+                <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:2px;">May</p>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;font-family:'Montserrat',sans-serif;">Torneo VII</p>
+                <p style="font-family:'Playfair Display',serif;font-size:15px;color:#fff;line-height:1.3;margin-top:2px;">Roda Padel Reserve</p>
+                <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.5px;">Los Alc&aacute;zares, Murcia</p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- JUNIO -->
+        <div class="mt-8">
+          <p class="text-[10px] uppercase tracking-[3px] text-[#c9a84c] font-semibold mb-4">Junio 2026</p>
+          <div class="flex flex-col gap-3">
+
+            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px 18px;" class="flex items-center gap-4">
+              <div style="flex-shrink:0;min-width:64px;text-align:center;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:8px 6px;">
+                <p style="font-family:'Playfair Display',serif;font-size:13px;color:#c9a84c;line-height:1.2;">Por<br>confirmar</p>
+                <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:2px;">Jun</p>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;font-family:'Montserrat',sans-serif;">Torneo VIII</p>
+                <p style="font-family:'Playfair Display',serif;font-size:15px;color:#fff;line-height:1.3;margin-top:2px;">Vola P&aacute;del Estadio</p>
+                <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.5px;">Elche, Alicante</p>
+              </div>
+
             </div>
 
           </div>
@@ -538,21 +705,15 @@
 <section id="app" class="sec-pad" style="background:linear-gradient(135deg,#0f200f 0%,#1e3320 100%);">
   <div class="max-w-4xl mx-auto">
     <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-      <div class="flex-1 text-center lg:text-left">
-        <p class="section-label">APP</p>
-        <h2 class="section-title">Gestiona los torneos<br>desde la app</h2>
-        <p class="mt-5 text-sm text-white/55 leading-relaxed font-light max-w-md mx-auto lg:mx-0">
-          Inscríbete, consulta cuadros, resultados y clasificaciones en tiempo real. Todo el Memories Padel Tour en la palma de tu mano.
-        </p>
-        <a href="https://padeldoor.app/descargar" target="_blank" rel="noopener noreferrer"
-           class="inline-flex items-center gap-3 mt-8 px-7 py-3.5 bg-[#c9a84c] text-[#0f200f] text-xs uppercase tracking-widest font-semibold rounded hover:bg-white transition-colors duration-200">
-          <span class="material-icons" style="font-size:18px;">smartphone</span>
-          Descargar PadelDoor
-        </a>
-      </div>
-      <div class="hidden lg:flex flex-shrink-0 flex-col items-center gap-6">
+      <!-- Móvil: 1º label APP, 2º logo, 3º texto+botón — Escritorio: texto izquierda, logo+iconos derecha -->
+
+      <!-- Label APP — solo visible en móvil arriba del todo -->
+      <p class="section-label lg:hidden">APP</p>
+
+      <!-- Logo + iconos — 2º en móvil, derecha en escritorio -->
+      <div class="flex flex-shrink-0 flex-col items-center gap-6 lg:order-2">
         <div style="width:120px;height:120px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:24px;" class="flex items-center justify-center">
-          <span class="material-icons" style="font-size:56px;color:#c9a84c;">sports_tennis</span>
+          <img src="RECURSOS/padeldoor/Logo Padeldoor.png" alt="PadelDoor" style="width:80px;height:80px;object-fit:contain;"/>
         </div>
         <div class="flex gap-4">
           <div style="width:52px;height:52px;background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:12px;" class="flex items-center justify-center"><span class="material-icons" style="font-size:24px;color:#c9a84c;">emoji_events</span></div>
@@ -560,18 +721,36 @@
           <div style="width:52px;height:52px;background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:12px;" class="flex items-center justify-center"><span class="material-icons" style="font-size:24px;color:#c9a84c;">notifications</span></div>
         </div>
       </div>
+
+      <!-- Texto y botón — 3º en móvil, izquierda en escritorio -->
+      <div class="flex-1 text-center lg:text-left lg:order-1">
+        <p class="section-label hidden lg:block">APP</p>
+        <h2 class="section-title">Gestiona los torneos<br>desde la app</h2>
+        <p class="mt-5 text-sm text-white/55 leading-relaxed font-light max-w-md mx-auto lg:mx-0">
+          Inscríbete, consulta cuadros, resultados y clasificaciones en tiempo real.
+        </p>
+        <p class="mt-4 text-sm text-white/55 leading-relaxed font-light max-w-md mx-auto lg:mx-0">
+          El circuito cuenta con un sistema de <strong>rankings</strong>: sumarás puntos en cada torneo y los mejores clasificados accederán gratuitamente a la <strong>Master Final</strong> — prevista para finales de 2026.
+        </p>
+        <a href="https://padeldoor.app/descargar" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-3 mt-8 px-7 py-3.5 bg-[#c9a84c] text-[#0f200f] text-xs uppercase tracking-widest font-semibold rounded hover:bg-white transition-colors duration-200">
+          <span class="material-icons" style="font-size:18px;">smartphone</span>
+          Descargar PadelDoor
+        </a>
+      </div>
     </div>
   </div>
 </section>
 
 
 <!-- REDES -->
-<section id="redes" class="sec-pad" style="background:#162a12;">
-  <div class="max-w-3xl mx-auto text-center">
+<section id="redes" class="sec-pad" style="background:#162a12; background-image:url('RECURSOS/comunidad/comunidad.JPG'); background-size:cover; background-position:center; background-repeat:no-repeat; position:relative;">
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,0.72);pointer-events:none;"></div>
+  <div class="max-w-3xl mx-auto text-center" style="position:relative;z-index:1;">
     <p class="section-label">Comunidad</p>
-    <h2 class="section-title">Unete &amp; Siguenos</h2>
+    <h2 class="section-title">Únete y Síguenos</h2>
     <p class="mt-4 text-sm text-white/50 leading-relaxed font-light max-w-md mx-auto">
-      Mantente al dia de todas las novedades, fechas y resultados del circuito.
+      Mantente al día de todas las novedades, fechas y resultados de los torneos.
     </p>
     <div class="divider"></div>
     <div class="mt-10 md:mt-14 grid grid-cols-1 gap-4 max-w-lg mx-auto sm:max-w-xl sm:grid-cols-2">
@@ -610,19 +789,20 @@
     <img src="RECURSOS/logo.PNG" alt="Logo" class="h-8 w-auto opacity-25 mb-1"/>
     <p>2026 Memories Padel Club. All Rights Reserved.</p>
     <div class="flex space-x-4 text-[10px]">
-      <a class="hover:text-white/60 transition-colors" href="#">Politica de privacidad</a>
+      <a class="hover:text-white/60 transition-colors" href="#">Política de privacidad</a>
       <span>|</span>
-      <a class="hover:text-white/60 transition-colors" href="#">Terminos</a>
+      <a class="hover:text-white/60 transition-colors" href="#">Términos</a>
     </div>
   </div>
 </footer>
 
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
   (function(){
     const track=document.getElementById('carouselTrack');
     const dots=document.querySelectorAll('.carousel-dot');
-    const total=7; let current=0;
+    const total=8; let current=0;
     function goTo(i){current=(i+total)%total;track.style.transform='translateX(-'+current*100+'%)';dots.forEach((d,j)=>d.classList.toggle('active',j===current));}
     dots.forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.index)));
     // swipe support
@@ -668,30 +848,49 @@
     var menu = document.getElementById('mobileMenu');
     if(!menu.contains(e.target) && !btn.contains(e.target)) closeMobileMenu();
   });
-  // Map pin interactions
-  document.querySelectorAll('.map-pin').forEach(function(pin){
-    pin.addEventListener('click', function(e){
-      e.stopPropagation();
-      var popup = document.getElementById('mapPopup');
-      document.getElementById('popupCity').textContent  = pin.dataset.city;
-      document.getElementById('popupVenue').textContent = pin.dataset.venue;
-      document.getElementById('popupLink').href         = pin.dataset.url;
-      var container = pin.parentElement;
-      var pinL = parseFloat(pin.style.left);
-      var pinT = parseFloat(pin.style.top);
-      popup.style.display = 'block';
-      var pw = popup.offsetWidth;
-      var cw = container.offsetWidth;
-      var ch = container.offsetHeight;
-      var left = (pinL / 100) * cw - pw / 2;
-      left = Math.max(4, Math.min(left, cw - pw - 4));
-      var top  = (pinT / 100) * ch - popup.offsetHeight - 20;
-      if(top < 4) top = (pinT / 100) * ch + 20;
-      popup.style.left = left + 'px';
-      popup.style.top  = top  + 'px';
+  // Leaflet map — Comunitat Valenciana + Murcia
+  (function(){
+    var map = L.map('sedesMap', {
+      zoomControl: true,
+      scrollWheelZoom: false,
+      attributionControl: false,
+      dragging: true
     });
-  });
-  document.addEventListener('click', function(){ document.getElementById('mapPopup').style.display='none'; });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19, subdomains: 'abcd'
+    }).addTo(map);
+
+    var sedes = [
+      { lat: 39.5942, lng: -0.4677, logo: 'RECURSOS/sedes/logo-sedes/Calderona Wellness - Valencia.png' },
+      { lat: 38.8408, lng:  0.1059, logo: 'RECURSOS/sedes/logo-sedes/Padelpoint - Denia.png' },
+      { lat: 38.6344, lng: -0.1081, logo: 'RECURSOS/sedes/logo-sedes/Padelpoint - La Nucía.png' },
+      { lat: 38.5200, lng: -0.1270, logo: 'RECURSOS/sedes/logo-sedes/Padelpoint - Melia Villaitana.png' },
+      { lat: 38.3460, lng: -0.4815, logo: 'RECURSOS/sedes/logo-sedes/Sportclub - Alicante.png' },
+      { lat: 38.4770, lng: -0.7890, logo: 'RECURSOS/sedes/logo-sedes/Padel Lacy - Elda.png' },
+      { lat: 38.2644, lng: -0.7002, logo: 'RECURSOS/sedes/logo-sedes/Vola Padel Estadio - Elche.PNG' },
+      { lat: 37.7400, lng: -0.8520, logo: 'RECURSOS/sedes/logo-sedes/Roda Padel Reserve - Mar menor.png' }
+    ];
+
+    sedes.forEach(function(s) {
+      var encoded = s.logo.replace(/ /g,'%20').replace(/í/g,'%C3%AD');
+      var icon = L.divIcon({
+        className: '',
+        html: '<div class="lf-pin"></div>',
+        iconSize:   [16, 23],
+        iconAnchor: [8, 23],
+        popupAnchor:[0, -28]
+      });
+      L.marker([s.lat, s.lng], { icon: icon })
+        .addTo(map)
+        .bindPopup('<img src="' + encoded + '" class="lf-logo-popup"/>', {
+          className:  'logo-popup',
+          maxWidth:   340,
+          closeButton: false
+        });
+    });
+
+    map.fitBounds([[37.5, -1.1], [39.8, 0.3]], {padding:[20,20]});
+  })();
 
   function showCat(tab){
     document.getElementById('catGen').style.display=tab==='gen'?'':'none';
@@ -700,20 +899,24 @@
     document.getElementById('tabFem').classList.toggle('active-tab',tab==='fem');
   }
   const venues=[
-    {city:"Valencia",venue:"Calderona Wellness",url:"https://calderonawellness.com/"},
-    {city:"Alzira",venue:"Zoma Sports Center",url:"https://zomasportscenter.es/"},
-    {city:"Denia",venue:"Padelpoint Denia",url:"https://www.jubopadel.com/"},
-    {city:"La Nucia",venue:"Padelpoint La Nucia",url:"https://padelpoint.es/"},
-    {city:"Benidorm",venue:"Padelpoint Melia Villaitana",url:"https://padelpoint.es/"},
-    {city:"Alicante",venue:"SportClub Alicante",url:"https://sportclubalicante.com/"},
-    {city:"Elda",venue:"Padel Lacy",url:"https://padellacy.es/"},
-    {city:"Elche",venue:"Vola Padel Club",url:"https://volapadel.com/"},
+    {venue:"Calderona Wellness",        url:"https://www.calderonawellness.com/",                   photo:"RECURSOS/sedes/foto-sedes/Calderona Wellness - Valencia.png"},
+    {venue:"Padelpoint Denia",           url:"https://padelpointdenia.matchpoint.com.es",             photo:"RECURSOS/sedes/foto-sedes/Padelpoint - Denia.png"},
+    {venue:"Padelpoint La Nuc\u00eda",      url:"https://www.clubpadelpoint.es/",                        photo:"RECURSOS/sedes/foto-sedes/Padelpoint - La Nuc\u00eda.png"},
+    {venue:"Padelpoint Meli\u00e1 Villaitana",url:"https://padelpointvillaitana.com",                    photo:"RECURSOS/sedes/foto-sedes/Padelpoint - Melia Villaitana.png"},
+    {venue:"SportClub Alicante",         url:"https://sportclubalicante.com/",                        photo:"RECURSOS/sedes/foto-sedes/Sportclub - Alicante.png"},
+    {venue:"Padel Lacy",                 url:"https://padel-lacy.com/",                               photo:"RECURSOS/sedes/foto-sedes/Padel Lacy - Elda.png"},
+    {venue:"Vola P\u00e1del Estadio",        url:"https://www.instagram.com/volapadelestadio/",           photo:"RECURSOS/sedes/foto-sedes/Vola Padel Estadio - Elche.png"},
+    {venue:"Roda Padel Reserve",         url:"https://rodapadelreserve.com/",                         photo:"RECURSOS/sedes/foto-sedes/Roda Padel Reserve - Mar Menor.png"},
   ];
   const grid=document.getElementById('sedesGrid');
   venues.forEach(v=>{
     const c=document.createElement('a');
     c.className='sede-card'; c.href=v.url; c.target='_blank'; c.rel='noopener noreferrer';
-    c.innerHTML='<span class="city-tag">'+v.city+'</span><span class="venue-title">'+v.venue+'</span><span class="venue-arrow">Ver sede <span class="material-icons" style="font-size:13px;">arrow_forward</span></span>';
+    c.innerHTML=`
+      <img class="sede-card-img" src="${v.photo}" alt="${v.venue}" loading="lazy"/>
+      <div class="sede-card-body">
+        <span class="venue-arrow">Ver sede <span class="material-icons" style="font-size:12px;">arrow_forward</span></span>
+      </div>`;
     grid.appendChild(c);
   });
 </script>

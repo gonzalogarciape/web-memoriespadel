@@ -4,6 +4,12 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Tienda — Memories Padel Club</title>
+<link rel="icon" type="image/png" href="RECURSOS/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="RECURSOS/favicon/favicon.svg" />
+<link rel="shortcut icon" href="RECURSOS/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="RECURSOS/favicon/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="Memories Padel Club" />
+<link rel="manifest" href="RECURSOS/favicon/site.webmanifest" />
 <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
 <script>
   tailwind.config = {
@@ -446,9 +452,6 @@
   <div class="max-w-3xl mx-auto px-5">
     <p class="section-label">Memories Padel Club</p>
     <h1 style="font-family:'Great Vibes',cursive;font-size:clamp(3rem,8vw,5rem);line-height:1.1;text-shadow:0 4px 24px rgba(0,0,0,0.4);">Tienda Oficial</h1>
-    <p class="mt-5 text-sm text-white/50 font-light leading-relaxed max-w-md mx-auto">
-      Viste los colores del circuito. Equipamiento y merchandise exclusivo del Memories Padel Tour.
-    </p>
     <div class="divider"></div>
   </div>
 </section>
@@ -458,10 +461,10 @@
   <div class="max-w-5xl mx-auto">
 
     <!-- Grid de productos -->
-    <div class="flex justify-center" id="productsGrid">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="productsGrid">
 
       <!-- Camiseta Tour 2026 -->
-      <div class="product-card" style="width:min(320px,90vw);" data-category="ropa" data-product-id="15638802366808">
+      <div class="product-card" data-category="ropa" data-product-id="15638802366808">
         <div class="product-img" id="img-15638802366808">
           <span class="material-icons placeholder-icon" style="font-size:56px;">checkroom</span>
         </div>
@@ -486,6 +489,102 @@
         <button class="btn-buy" id="btn-15638802366808" onclick="addToCart('15638802366808')" disabled>Selecciona una opción</button>
       </div>
 
+      <!-- Producto 2 -->
+      <div class="product-card" data-category="ropa" data-product-id="15645885595992">
+        <div class="product-img" id="img-15645885595992">
+          <span class="material-icons placeholder-icon" style="font-size:56px;">checkroom</span>
+        </div>
+        <div class="product-info">
+          <p class="product-name" id="name-15645885595992"></p>
+          <p class="product-desc" id="desc-15645885595992"></p>
+          <p class="product-price" id="price-15645885595992"></p>
+        </div>
+        <div class="variant-loading" id="variants-loading-15645885595992">Cargando opciones...</div>
+        <div id="options-15645885595992" style="display:none;padding:0 16px 12px;">
+          <div id="color-group-15645885595992" style="margin-bottom:10px;display:none;">
+            <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);font-family:'Montserrat',sans-serif;margin-bottom:6px;">Color</p>
+            <div class="variant-selector" style="padding:0;" id="colors-15645885595992"></div>
+          </div>
+          <div id="size-group-15645885595992" style="display:none;">
+            <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);font-family:'Montserrat',sans-serif;margin-bottom:6px;">Talla</p>
+            <div class="variant-selector" style="padding:0;" id="sizes-15645885595992"></div>
+          </div>
+        </div>
+        <button class="btn-buy" id="btn-15645885595992" onclick="addToCart('15645885595992')" disabled>Selecciona una opción</button>
+      </div>
+
+      <!-- Producto 3 -->
+      <div class="product-card" data-category="ropa" data-product-id="15645884875096">
+        <div class="product-img" id="img-15645884875096">
+          <span class="material-icons placeholder-icon" style="font-size:56px;">checkroom</span>
+        </div>
+        <div class="product-info">
+          <p class="product-name" id="name-15645884875096"></p>
+          <p class="product-desc" id="desc-15645884875096"></p>
+          <p class="product-price" id="price-15645884875096"></p>
+        </div>
+        <div class="variant-loading" id="variants-loading-15645884875096">Cargando opciones...</div>
+        <div id="options-15645884875096" style="display:none;padding:0 16px 12px;">
+          <div id="color-group-15645884875096" style="margin-bottom:10px;display:none;">
+            <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);font-family:'Montserrat',sans-serif;margin-bottom:6px;">Color</p>
+            <div class="variant-selector" style="padding:0;" id="colors-15645884875096"></div>
+          </div>
+          <div id="size-group-15645884875096" style="display:none;">
+            <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);font-family:'Montserrat',sans-serif;margin-bottom:6px;">Talla</p>
+            <div class="variant-selector" style="padding:0;" id="sizes-15645884875096"></div>
+          </div>
+        </div>
+        <button class="btn-buy" id="btn-15645884875096" onclick="addToCart('15645884875096')" disabled>Selecciona una opción</button>
+      </div>
+
+      <!-- Producto 4 -->
+      <div class="product-card" data-category="ropa" data-product-id="15645884186968">
+        <div class="product-img" id="img-15645884186968">
+          <span class="material-icons placeholder-icon" style="font-size:56px;">checkroom</span>
+        </div>
+        <div class="product-info">
+          <p class="product-name" id="name-15645884186968"></p>
+          <p class="product-desc" id="desc-15645884186968"></p>
+          <p class="product-price" id="price-15645884186968"></p>
+        </div>
+        <div class="variant-loading" id="variants-loading-15645884186968">Cargando opciones...</div>
+        <div id="options-15645884186968" style="display:none;padding:0 16px 12px;">
+          <div id="color-group-15645884186968" style="margin-bottom:10px;display:none;">
+            <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);font-family:'Montserrat',sans-serif;margin-bottom:6px;">Color</p>
+            <div class="variant-selector" style="padding:0;" id="colors-15645884186968"></div>
+          </div>
+          <div id="size-group-15645884186968" style="display:none;">
+            <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);font-family:'Montserrat',sans-serif;margin-bottom:6px;">Talla</p>
+            <div class="variant-selector" style="padding:0;" id="sizes-15645884186968"></div>
+          </div>
+        </div>
+        <button class="btn-buy" id="btn-15645884186968" onclick="addToCart('15645884186968')" disabled>Selecciona una opción</button>
+      </div>
+
+      <!-- Producto 5 -->
+      <div class="product-card" data-category="ropa" data-product-id="15645857317208">
+        <div class="product-img" id="img-15645857317208">
+          <span class="material-icons placeholder-icon" style="font-size:56px;">checkroom</span>
+        </div>
+        <div class="product-info">
+          <p class="product-name" id="name-15645857317208"></p>
+          <p class="product-desc" id="desc-15645857317208"></p>
+          <p class="product-price" id="price-15645857317208"></p>
+        </div>
+        <div class="variant-loading" id="variants-loading-15645857317208">Cargando opciones...</div>
+        <div id="options-15645857317208" style="display:none;padding:0 16px 12px;">
+          <div id="color-group-15645857317208" style="margin-bottom:10px;display:none;">
+            <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);font-family:'Montserrat',sans-serif;margin-bottom:6px;">Color</p>
+            <div class="variant-selector" style="padding:0;" id="colors-15645857317208"></div>
+          </div>
+          <div id="size-group-15645857317208" style="display:none;">
+            <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);font-family:'Montserrat',sans-serif;margin-bottom:6px;">Talla</p>
+            <div class="variant-selector" style="padding:0;" id="sizes-15645857317208"></div>
+          </div>
+        </div>
+        <button class="btn-buy" id="btn-15645857317208" onclick="addToCart('15645857317208')" disabled>Selecciona una opción</button>
+      </div>
+
     </div>
 
   </div>
@@ -498,9 +597,9 @@
     <img src="RECURSOS/logo.PNG" alt="Logo" class="h-8 w-auto opacity-25 mb-1"/>
     <p>2026 Memories Padel Club. All Rights Reserved.</p>
     <div class="flex space-x-4 text-[10px]">
-      <a class="hover:text-white/60 transition-colors" href="#">Politica de privacidad</a>
+      <a class="hover:text-white/60 transition-colors" href="#">Política de privacidad</a>
       <span>|</span>
-      <a class="hover:text-white/60 transition-colors" href="#">Terminos</a>
+      <a class="hover:text-white/60 transition-colors" href="#">Términos</a>
     </div>
   </div>
 </footer>
@@ -508,7 +607,7 @@
 
 <script>
   // ─── Shopify config ───────────────────────────────────────────────
-  const SHOPIFY_DOMAIN = 'memories-padel-club.myshopify.com';
+  const SHOPIFY_DOMAIN = 'shop.memoriespadel.es';
   const SHOPIFY_TOKEN  = '294f71697f37df68e789339ba9e65dbd';
   const STOREFRONT_URL = `https://${SHOPIFY_DOMAIN}/api/2025-01/graphql.json`;
 
@@ -597,50 +696,53 @@
       if (imgEl) {
         const imgs = p.images.edges.map(function(e){ return e.node; });
         let current = 0;
-        function renderCarousel() {
-          imgEl.innerHTML = '';
+
+        // Renderizar todas las imágenes de una vez (apiladas) — el navegador las descarga en paralelo
+        imgEl.innerHTML = '';
+        imgEl.style.position = 'relative';
+        const imEls = imgs.map(function(img, i) {
           const im = document.createElement('img');
-          im.src = imgs[current].url;
-          im.alt = imgs[current].altText || p.title;
-          im.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;';
-          im.addEventListener('click', function(e){
-            e.stopPropagation();
-            openLightbox(imgs, current);
-          });
+          im.src = img.url;
+          im.alt = img.altText || p.title;
+          im.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;transition:opacity 0.25s;opacity:' + (i === 0 ? '1' : '0') + ';pointer-events:' + (i === 0 ? 'auto' : 'none') + ';';
+          im.addEventListener('click', function(e){ e.stopPropagation(); openLightbox(imgs, current); });
           imgEl.appendChild(im);
-          if (imgs.length > 1) {
-            const prev = document.createElement('button');
-            prev.className = 'carousel-arrow prev';
-            prev.innerHTML = '&#8249;';
-            prev.addEventListener('click', function(e){
-              e.stopPropagation();
-              current = (current - 1 + imgs.length) % imgs.length;
-              renderCarousel();
-            });
-            const next = document.createElement('button');
-            next.className = 'carousel-arrow next';
-            next.innerHTML = '&#8250;';
-            next.addEventListener('click', function(e){
-              e.stopPropagation();
-              current = (current + 1) % imgs.length;
-              renderCarousel();
-            });
-            const dots = document.createElement('div');
-            dots.className = 'carousel-dots';
-            imgs.forEach(function(_, i) {
-              const d = document.createElement('button');
-              d.className = 'carousel-dot' + (i === current ? ' active' : '');
-              d.addEventListener('click', function(e){
-                e.stopPropagation(); current = i; renderCarousel();
-              });
-              dots.appendChild(d);
-            });
-            imgEl.appendChild(prev);
-            imgEl.appendChild(next);
-            imgEl.appendChild(dots);
-          }
+          return im;
+        });
+
+        function showSlide(idx) {
+          imEls[current].style.opacity = '0';
+          imEls[current].style.pointerEvents = 'none';
+          current = (idx + imgs.length) % imgs.length;
+          imEls[current].style.opacity = '1';
+          imEls[current].style.pointerEvents = 'auto';
+          if (dots) dots.querySelectorAll('.carousel-dot').forEach(function(d, i){ d.classList.toggle('active', i === current); });
         }
-        renderCarousel();
+
+        let dots = null;
+        if (imgs.length > 1) {
+          const prev = document.createElement('button');
+          prev.className = 'carousel-arrow prev';
+          prev.innerHTML = '&#8249;';
+          prev.addEventListener('click', function(e){ e.stopPropagation(); showSlide(current - 1); });
+
+          const next = document.createElement('button');
+          next.className = 'carousel-arrow next';
+          next.innerHTML = '&#8250;';
+          next.addEventListener('click', function(e){ e.stopPropagation(); showSlide(current + 1); });
+
+          dots = document.createElement('div');
+          dots.className = 'carousel-dots';
+          imgs.forEach(function(_, i) {
+            const d = document.createElement('button');
+            d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            d.addEventListener('click', function(e){ e.stopPropagation(); showSlide(i); });
+            dots.appendChild(d);
+          });
+          imgEl.appendChild(prev);
+          imgEl.appendChild(next);
+          imgEl.appendChild(dots);
+        }
       }
 
       // Opciones: color y talla
