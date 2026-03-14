@@ -50,11 +50,9 @@
   }
   #mainNav a { transition: color 0.2s; }
 
-  /* scroll-margin-top se aplica dinámicamente via JS según la altura real del nav */
+  /* scroll-padding-top keeps fixed nav from covering anchor targets */
   html { scroll-padding-top: 64px; }
   @media(min-width:768px){ html { scroll-padding-top: 72px; } }
-  section[id] { scroll-margin-top: 64px; }
-  @media(min-width:768px){ section[id] { scroll-margin-top: 72px; } }
 
   .carousel-wrap { position: relative; width: 100%; height: 100vh; overflow: hidden; }
   .carousel-track { display: flex; height: 100%; transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
@@ -175,6 +173,25 @@
   .delay-1 { animation-delay:0.1s; opacity:0; }
   .delay-2 { animation-delay:0.25s; opacity:0; }
   .delay-3 { animation-delay:0.4s; opacity:0; }
+
+  /* ── Cookiebot compact ── */
+  #CybotCookiebotDialog { padding:16px 20px !important; max-width:960px !important; }
+  #CybotCookiebotDialogBody { gap:10px !important; }
+  #CybotCookiebotDialogBodyContent { padding:0 !important; }
+  #CybotCookiebotDialogBodyContentTitle { font-size:13px !important; margin-bottom:4px !important; }
+  #CybotCookiebotDialogBodyContentText { font-size:11px !important; line-height:1.5 !important; }
+  #CybotCookiebotDialogBodyButtons { gap:6px !important; flex-direction:column !important; min-width:160px !important; }
+  .CybotCookiebotDialogBodyButton { padding:8px 12px !important; font-size:11px !important; min-height:0 !important; height:auto !important; }
+  #CybotCookiebotDialogBodyLevelWrapper { gap:12px !important; margin-top:8px !important; }
+  .CybotCookiebotDialogBodyLevelButtonWrapper { gap:4px !important; }
+  .CybotCookiebotDialogBodyLevelButtonDescription { font-size:10px !important; }
+  #CybotCookiebotDialogPoweredbyImage { height:16px !important; }
+  #CybotCookiebotDialogPoweredbyLink { margin-top:4px !important; }
+  @media(max-width:600px){
+    #CybotCookiebotDialog { padding:12px 14px !important; }
+    #CybotCookiebotDialogBodyButtons { flex-direction:row !important; flex-wrap:wrap !important; }
+    .CybotCookiebotDialogBodyButton { font-size:10px !important; padding:7px 8px !important; }
+  }
 </style>
 </head>
 <body>
@@ -857,9 +874,6 @@
     function updateScrollMargins(){
       var navH = nav.offsetHeight;
       document.documentElement.style.scrollPaddingTop = navH + 'px';
-      document.querySelectorAll('section[id]').forEach(function(s){
-        s.style.scrollMarginTop = navH + 'px';
-      });
       menu.style.top = navH + 'px';
     }
     function updateNav(){
